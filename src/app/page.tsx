@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/layout/container";
-import { SearchBar } from "@/components/catalog/search-bar";
-import { FilterSidebar } from "@/components/catalog/filter-sidebar";
-import { CatalogGrid } from "@/components/catalog/catalog-grid";
+import { Button } from "@/components/ui/button";
 import { getAllInstruments } from "@/lib/catalog/instruments-repository";
-import {
-  filterByClassification,
-  filterInstruments,
-  getFacetOptions,
-  sortByTitle,
-} from "@/lib/catalog/catalog-service";
-import { catalogQueryFromSearchParams } from "@/core/models/catalog-query";
-import { currentListHref } from "@/lib/catalog/catalog-url";
+import { filterByClassification } from "@/lib/catalog/catalog-service";
 
 export const metadata: Metadata = {
   // Set as a full literal string rather than relying on the root layout's
@@ -24,56 +16,102 @@ export const metadata: Metadata = {
     "Catálogo de instrumentos para avaliação de chatbots educacionais.",
 };
 
-type RawSearchParams = Record<string, string | string[] | undefined>;
-
-export default async function CatalogPage({
-  searchParams,
-}: {
-  searchParams: Promise<RawSearchParams>;
-}) {
-  const query = catalogQueryFromSearchParams(await searchParams);
-
-  // Only Adaptado/Original instruments are shown here (and match the search
-  // bar). Ad-hoc instruments are exclusive to the dedicated /ad-hoc page.
-  const adapted = filterByClassification(getAllInstruments(), "adapted");
-  const facetOptions = getFacetOptions(adapted);
-  const filtered = sortByTitle(filterInstruments(adapted, query));
+export default function HomePage() {
+  const all = getAllInstruments();
+  const adHocCount = filterByClassification(all, "ad-hoc").length;
+  const adaptedCount = all.length - adHocCount;
 
   return (
     <>
-      <Container className="grid gap-8 py-8 lg:grid-cols-[260px_1fr]">
-        <FilterSidebar
-          basePath="/"
-          state={query}
-          facetOptions={facetOptions}
-        />
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-primary text-xs font-semibold tracking-wide uppercase">
-              Instrumentos validados
-            </p>
-            <h1 className="text-2xl font-bold tracking-tight">
-              Instrumentos de avaliação
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              {adapted.length} instrumentos com origem em fontes
-              psicométricas validadas, usados em pesquisas sobre chatbots
-              educacionais — questionários, escalas, entrevistas e rubricas.
-            </p>
-          </div>
-          <SearchBar action="/" state={query} />
-          <p className="text-muted-foreground text-sm">
-            {filtered.length}{" "}
-            {filtered.length === 1
-              ? "instrumento encontrado"
-              : "instrumentos encontrados"}
+      <section className="bg-[#0F172A] py-20">
+        <Container className="max-w-3xl space-y-6 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Já perdeu tempo procurando qual instrumento usar para avaliar seu
+            chatbot educacional?
+          </h1>
+          <Button asChild size="lg" className="rounded-full">
+            <Link href="/instrumentos">Explorar catálogo</Link>
+          </Button>
+        </Container>
+      </section>
+
+      <section className="bg-background py-16">
+        <Container className="max-w-3xl space-y-3">
+          <p className="text-primary text-xs font-semibold tracking-wide uppercase">
+            O problema
           </p>
-          <CatalogGrid
-            instruments={filtered}
-            backHref={currentListHref("/", query)}
-          />
-        </div>
-      </Container>
+          <p className="text-sm leading-relaxed">
+            Pesquisadores que avaliam chatbots educacionais frequentemente
+            precisam escolher, entre dezenas de questionários, escalas,
+            entrevistas e rubricas espalhados pela literatura, qual
+            instrumento usar para medir usabilidade, satisfação, engajamento,
+            confiança ou efetividade pedagógica. Essa escolha é difícil
+            quando não há um lugar único reunindo essas opções lado a lado.
+          </p>
+        </Container>
+      </section>
+
+      <section className="bg-accent py-16">
+        <Container className="max-w-3xl space-y-3">
+          <p className="text-primary text-xs font-semibold tracking-wide uppercase">
+            O catálogo
+          </p>
+          <p className="text-sm leading-relaxed">
+            O ChatSelect reúne {all.length} instrumentos extraídos de artigos
+            científicos que avaliaram chatbots em contextos educacionais.
+            Cada ficha documenta autores, idioma original, traduções, amostra
+            do estudo, número de itens, formato de resposta, forma de
+            pontuação, confiabilidade, vantagens, limitações e a fonte
+            bibliográfica completa.
+          </p>
+          <p className="text-sm leading-relaxed">
+            Cada instrumento passou por uma triagem quanto à sua origem:
+            instrumentos com fonte psicométrica validada e citável, como a
+            SUS ou o TAM, compõem a lista principal ({adaptedCount}{" "}
+            instrumentos); já os instrumentos Ad Hoc ({adHocCount}{" "}
+            instrumentos) — criados pelos próprios autores de um estudo
+            especificamente para aquela pesquisa, geralmente sem dados
+            formais de confiabilidade — ficam reunidos separadamente na aba{" "}
+            <Link
+              href="/ad-hoc"
+              className="text-primary hover:text-primary-hover hover:underline"
+            >
+              Ad Hoc
+            </Link>
+            . A página inicial mostra apenas os instrumentos com origem
+            validada; a lista completa de instrumentos Ad Hoc fica na aba{" "}
+            <Link
+              href="/ad-hoc"
+              className="text-primary hover:text-primary-hover hover:underline"
+            >
+              Ad Hoc
+            </Link>
+            .
+          </p>
+        </Container>
+      </section>
+
+      <section className="bg-[#0F172A] py-16">
+        <Container className="space-y-10 text-center">
+          <div className="mx-auto grid max-w-xl grid-cols-3 gap-6">
+            <div>
+              <p className="text-4xl font-bold text-white">{all.length}</p>
+              <p className="text-sm text-blue-300">Instrumentos</p>
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-white">{adaptedCount}</p>
+              <p className="text-sm text-blue-300">Validados</p>
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-white">{adHocCount}</p>
+              <p className="text-sm text-blue-300">Ad Hoc</p>
+            </div>
+          </div>
+          <Button asChild size="lg" className="rounded-full">
+            <Link href="/instrumentos">Ir para o Catálogo</Link>
+          </Button>
+        </Container>
+      </section>
     </>
   );
 }

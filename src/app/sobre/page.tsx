@@ -2,8 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { User } from "lucide-react";
 import { Container } from "@/components/layout/container";
-import { getAllInstruments } from "@/lib/catalog/instruments-repository";
-import { filterByClassification } from "@/lib/catalog/catalog-service";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -18,10 +16,6 @@ const TEAM = [
 ] as const;
 
 export default function AboutPage() {
-  const all = getAllInstruments();
-  const adHocCount = filterByClassification(all, "ad-hoc").length;
-  const adaptedCount = all.length - adHocCount;
-
   return (
     <Container className="max-w-3xl space-y-6 py-8">
       <div>
@@ -35,59 +29,11 @@ export default function AboutPage() {
       </div>
 
       <section className="space-y-3 text-sm leading-relaxed">
-        <h2 className="text-xl font-semibold">O problema</h2>
-        <p>
-          Pesquisadores que avaliam chatbots educacionais frequentemente
-          precisam escolher, entre dezenas de questionários, escalas,
-          entrevistas e rubricas espalhados pela literatura, qual instrumento
-          usar para medir usabilidade, satisfação, engajamento, confiança ou
-          efetividade pedagógica. Essa escolha é difícil quando não há um
-          lugar único reunindo essas opções lado a lado.
-        </p>
-      </section>
-
-      <section className="space-y-3 text-sm leading-relaxed">
-        <h2 className="text-xl font-semibold">O catálogo</h2>
-        <p>
-          O ChatSelect reúne {all.length} instrumentos extraídos de artigos
-          científicos que avaliaram chatbots em contextos educacionais. Cada
-          ficha documenta autores, idioma original, traduções, amostra do
-          estudo, número de itens, formato de resposta, forma de pontuação,
-          confiabilidade, vantagens, limitações e a fonte bibliográfica
-          completa.
-        </p>
-        <p>
-          Cada instrumento passou por uma triagem quanto à sua origem:
-          instrumentos com fonte psicométrica validada e citável, como a SUS
-          ou o TAM, compõem a lista principal ({adaptedCount} instrumentos);
-          já os instrumentos Ad Hoc ({adHocCount} instrumentos) — criados
-          pelos próprios autores de um estudo especificamente para aquela
-          pesquisa, geralmente sem dados formais de confiabilidade — ficam
-          reunidos separadamente na aba{" "}
-          <Link
-            href="/ad-hoc"
-            className="text-primary hover:text-primary-hover hover:underline"
-          >
-            Ad Hoc
-          </Link>
-          . A página inicial mostra apenas os instrumentos com origem
-          validada; a lista completa de instrumentos Ad Hoc fica na aba{" "}
-          <Link
-            href="/ad-hoc"
-            className="text-primary hover:text-primary-hover hover:underline"
-          >
-            Ad Hoc
-          </Link>
-          .
-        </p>
-      </section>
-
-      <section className="space-y-3 text-sm leading-relaxed">
         <h2 className="text-xl font-semibold">Como usar</h2>
         <p>
           Navegue pela lista de instrumentos na aba{" "}
           <Link
-            href="/"
+            href="/instrumentos"
             className="text-primary hover:text-primary-hover hover:underline"
           >
             Catálogo

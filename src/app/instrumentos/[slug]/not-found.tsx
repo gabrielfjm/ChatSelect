@@ -10,7 +10,7 @@ export default function InstrumentNotFound() {
         O instrumento que você procura não existe ou foi removido do catálogo.
       </p>
       <Button asChild>
-        <Link href="/">Voltar aos instrumentos</Link>
+        <Link href="/instrumentos">Voltar aos instrumentos</Link>
       </Button>
     </Container>
   );

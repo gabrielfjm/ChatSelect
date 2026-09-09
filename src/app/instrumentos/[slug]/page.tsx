@@ -42,10 +42,11 @@ export default async function InstrumentPage({
   const instrument = findInstrumentBySlug(getAllInstruments(), slug);
   if (!instrument) notFound();
 
-  // Ad-hoc instruments are only ever linked from /ad-hoc (the home catalog
-  // excludes them), so classification alone tells us where "back" belongs.
+  // Ad-hoc instruments are only ever linked from /ad-hoc (the /instrumentos
+  // catalog excludes them), so classification alone tells us where "back"
+  // belongs.
   const isAdHoc = instrument.classification === "ad-hoc";
-  const parentHref = isAdHoc ? "/ad-hoc" : "/";
+  const parentHref = isAdHoc ? "/ad-hoc" : "/instrumentos";
   const parentLabel = isAdHoc ? "Ad Hoc" : "Catálogo";
   // `from` carries whatever filters/search were active on the listing the
   // user came from; only trust it if it actually points back into that same
