@@ -51,9 +51,15 @@ export default async function CatalogPage({
               Instrumentos de avaliação
             </h1>
             <p className="text-muted-foreground text-sm">
-              {adapted.length} instrumentos com origem em fontes
-              psicométricas validadas, usados em pesquisas sobre chatbots
-              educacionais — questionários, escalas, entrevistas e rubricas.
+              {adapted.length} instrumentos validados são questionários,
+              escalas, entrevistas ou rubricas com origem em fontes
+              psicométricas citáveis, desenvolvidos e testados em estudos
+              anteriores antes de serem aplicados em pesquisas com chatbots
+              educacionais. Isso significa que, na maioria dos casos, há
+              dados formais de confiabilidade (como Alfa de Cronbach) e
+              evidências de validação disponíveis para esses instrumentos —
+              eles passaram por um processo de verificação psicométrica
+              antes de chegarem ao contexto em que foram usados.
             </p>
           </div>
           <SearchBar action="/instrumentos" state={query} />
