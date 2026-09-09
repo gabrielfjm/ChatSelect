@@ -39,17 +39,17 @@ export default async function AdHocPage({
           Instrumentos não validados
         </p>
         <h1 className="text-2xl font-bold tracking-tight">
-          Instrumentos Ad Hoc
+          Instrumentos personalizados
         </h1>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          Instrumentos Ad Hoc são questionários, escalas ou roteiros criados
-          pelos próprios autores de um estudo especificamente para aquela
-          pesquisa, sem derivar de uma fonte psicométrica validada e citável.
-          Isso significa que, na maioria dos casos, não há dados formais de
-          confiabilidade (como Alfa de Cronbach) ou validação prévia
-          disponíveis para esses instrumentos — eles foram construídos sob
-          medida para responder às necessidades do estudo específico em que
-          foram aplicados.
+          Os instrumentos personalizados são chamados de Ad Hoc, que são
+          questionários, escalas ou roteiros criados pelos próprios autores
+          de um estudo especificamente para aquela pesquisa, sem derivar de
+          uma fonte psicométrica validada e citável. Isso significa que, na
+          maioria dos casos, não há dados formais de confiabilidade (como
+          Alfa de Cronbach) ou validação prévia disponíveis para esses
+          instrumentos — eles foram construídos sob medida para responder às
+          necessidades do estudo específico em que foram aplicados.
         </p>
       </div>
       <div className="grid gap-8 lg:grid-cols-[260px_1fr]">

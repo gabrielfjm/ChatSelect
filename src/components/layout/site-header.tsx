@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/instrumentos", label: "Catálogo" },
-  { href: "/ad-hoc", label: "Ad Hoc" },
+  { href: "/ad-hoc", label: "Instrumentos personalizados" },
   { href: "/solicitar", label: "Solicitar instrumento" },
   { href: "/sobre", label: "Sobre" },
 ] as const;
