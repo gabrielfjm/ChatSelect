@@ -10,12 +10,12 @@ import { SourceSection } from "@/components/instrument/source-section";
 import { DualApplicationNotice } from "@/components/instrument/dual-application-notice";
 import { getAllInstruments } from "@/lib/catalog/instruments-repository";
 import { findInstrumentBySlug } from "@/lib/catalog/catalog-service";
-import { isValidListHref } from "@/lib/catalog/catalog-url";
 
 interface InstrumentPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ from?: string }>;
 }
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getAllInstruments().map((instrument) => ({ slug: instrument.slug }));
@@ -33,12 +33,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function InstrumentPage({
-  params,
-  searchParams,
-}: InstrumentPageProps) {
+export default async function InstrumentPage({ params }: InstrumentPageProps) {
   const { slug } = await params;
-  const { from } = await searchParams;
   const instrument = findInstrumentBySlug(getAllInstruments(), slug);
   if (!instrument) notFound();
 
@@ -48,20 +44,16 @@ export default async function InstrumentPage({
   const isAdHoc = instrument.classification === "ad-hoc";
   const parentHref = isAdHoc ? "/ad-hoc" : "/instrumentos";
   const parentLabel = isAdHoc ? "Ad Hoc" : "Catálogo";
-  // `from` carries whatever filters/search were active on the listing the
-  // user came from; only trust it if it actually points back into that same
-  // section (see isValidListHref), otherwise fall back to the bare route.
-  const backHref = isValidListHref(from, parentHref) ? from : parentHref;
 
   return (
-    <Container className="py-8">
-      <Card className="grid overflow-hidden p-0 lg:grid-cols-[300px_1fr]">
+    <Container className="py-10 sm:py-14">
+      <Card className="grid overflow-hidden border-cyan-300/15 p-0 shadow-[0_20px_70px_rgba(0,0,0,0.24)] lg:grid-cols-[300px_1fr]">
         <InstrumentSidebar
           instrument={instrument}
-          backHref={backHref}
+          parentHref={parentHref}
           parentLabel={parentLabel}
         />
-        <div className="space-y-8 bg-white px-6 py-8 sm:px-8">
+        <div className="space-y-8 bg-[#0a1628] px-6 py-8 sm:px-8">
           {instrument.isDualApplication && <DualApplicationNotice />}
           <TextSection
             title="Descrição do instrumento"

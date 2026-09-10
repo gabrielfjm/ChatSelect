@@ -1,17 +1,10 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
+import { CatalogBrowser } from "@/components/catalog/catalog-browser";
+import { CatalogLoading } from "@/components/catalog/catalog-loading";
 import { Container } from "@/components/layout/container";
-import { SearchBar } from "@/components/catalog/search-bar";
-import { FilterSidebar } from "@/components/catalog/filter-sidebar";
-import { CatalogGrid } from "@/components/catalog/catalog-grid";
 import { getAllInstruments } from "@/lib/catalog/instruments-repository";
-import {
-  filterByClassification,
-  filterInstruments,
-  getFacetOptions,
-  sortByTitle,
-} from "@/lib/catalog/catalog-service";
-import { catalogQueryFromSearchParams } from "@/core/models/catalog-query";
-import { currentListHref } from "@/lib/catalog/catalog-url";
+import { filterByClassification } from "@/lib/catalog/catalog-service";
 
 export const metadata: Metadata = {
   title: "Instrumentos",
@@ -19,62 +12,29 @@ export const metadata: Metadata = {
     "Catálogo de instrumentos para avaliação de chatbots educacionais.",
 };
 
-type RawSearchParams = Record<string, string | string[] | undefined>;
-
-export default async function CatalogPage({
-  searchParams,
-}: {
-  searchParams: Promise<RawSearchParams>;
-}) {
-  const query = catalogQueryFromSearchParams(await searchParams);
-
-  // Only Adaptado/Original instruments are shown here (and match the search
-  // bar). Ad-hoc instruments are exclusive to the dedicated /ad-hoc page.
-  const adapted = filterByClassification(getAllInstruments(), "adapted");
-  const facetOptions = getFacetOptions(adapted);
-  const filtered = sortByTitle(filterInstruments(adapted, query));
+export default function CatalogPage() {
+  const instruments = filterByClassification(getAllInstruments(), "adapted");
 
   return (
     <>
-      <Container className="grid gap-8 py-8 lg:grid-cols-[260px_1fr]">
-        <FilterSidebar
-          basePath="/instrumentos"
-          state={query}
-          facetOptions={facetOptions}
-        />
-        <div className="flex flex-col gap-6">
-          <div>
-            <p className="text-primary text-xs font-semibold tracking-wide uppercase">
-              Instrumentos validados
-            </p>
-            <h1 className="text-2xl font-bold tracking-tight">
-              Instrumentos de avaliação
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              Os instrumentos validados são questionários, escalas,
-              entrevistas ou rubricas com origem em fontes psicométricas
-              citáveis, desenvolvidos e testados em estudos anteriores antes
-              de serem aplicados em pesquisas com chatbots educacionais.
-              Isso significa que, na maioria dos casos, há dados formais de
-              confiabilidade (como Alfa de Cronbach) e evidências de
-              validação disponíveis para esses instrumentos — eles passaram
-              por um processo de verificação psicométrica antes de chegarem
-              ao contexto em que foram usados.
-            </p>
-          </div>
-          <SearchBar action="/instrumentos" state={query} />
-          <p className="text-muted-foreground text-sm">
-            {filtered.length}{" "}
-            {filtered.length === 1
-              ? "instrumento encontrado"
-              : "instrumentos encontrados"}
+      <section className="tech-grid border-b border-cyan-300/10 bg-[radial-gradient(ellipse_50%_100%_at_15%_50%,rgba(14,162,189,0.1),transparent_72%),#071225]">
+        <Container className="py-12 sm:py-16">
+          <p className="mb-3 text-xs font-bold tracking-[0.16em] text-cyan-300 uppercase">
+            Instrumentos validados
           </p>
-          <CatalogGrid
-            instruments={filtered}
-            backHref={currentListHref("/instrumentos", query)}
-          />
-        </div>
-      </Container>
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Catálogo de instrumentos
+          </h1>
+          <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-7 sm:text-base">
+            Compare questionários, escalas, entrevistas e rubricas com origem em
+            fontes psicométricas identificáveis e evidências de validação.
+          </p>
+        </Container>
+      </section>
+
+      <Suspense fallback={<CatalogLoading />}>
+        <CatalogBrowser basePath="/instrumentos" instruments={instruments} />
+      </Suspense>
     </>
   );
 }

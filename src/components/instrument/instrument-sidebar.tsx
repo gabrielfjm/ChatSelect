@@ -1,5 +1,9 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
+import {
+  CatalogBackLink,
+  CatalogBackLinkFallback,
+} from "@/components/catalog/catalog-back-link";
 import { cn } from "@/lib/utils";
 import { categorySolidClasses } from "@/lib/catalog/category-colors";
 import type { Instrument } from "@/core/models/instrument";
@@ -22,31 +26,32 @@ function SidebarField({
   );
 }
 
-/** Dark fixed-style side panel replacing the old rigid 3-column meta grid
- * for short/identifying fields (title, authors, category, language,
- * translations) — the "← Voltar" link lives here too, carrying whatever
- * filters/search were active on the listing (see isValidListHref in
- * catalog-url.ts) so returning to the list doesn't reset them. */
+/** Dark side panel for the instrument's identifying metadata. The back link
+ * is hydrated separately so static exports can still preserve list filters. */
 export function InstrumentSidebar({
   instrument,
-  backHref,
+  parentHref,
   parentLabel,
 }: {
   instrument: Instrument;
-  backHref: string;
+  parentHref: string;
   parentLabel: string;
 }) {
   return (
-    <aside className="space-y-6 bg-[#0F172A] px-6 py-8 sm:px-8">
-      <Link
-        href={backHref}
-        className="inline-flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-white"
+    <aside className="tech-grid space-y-6 border-r border-cyan-300/10 bg-[#071225] px-6 py-8 sm:px-8">
+      <Suspense
+        fallback={
+          <CatalogBackLinkFallback
+            parentHref={parentHref}
+            parentLabel={parentLabel}
+          />
+        }
       >
-        &larr; Voltar ao {parentLabel}
-      </Link>
+        <CatalogBackLink parentHref={parentHref} parentLabel={parentLabel} />
+      </Suspense>
 
       <div className="space-y-3">
-        <Badge className="border-transparent bg-white/10 text-slate-300">
+        <Badge className="border border-cyan-300/15 bg-cyan-300/10 text-cyan-200">
           {instrument.sheetName}
         </Badge>
         <h1 className="text-2xl font-bold tracking-tight text-white">

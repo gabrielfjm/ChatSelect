@@ -2,27 +2,27 @@
 @import "tw-animate-css";
 
 :root {
-  color-scheme: light;
-  --radius: 0.625rem;
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-foreground: #ffffff;
-  --secondary: #dbeafe;
-  --secondary-foreground: #1e40af;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #eff6ff;
-  --accent-foreground: #0f172a;
-  --destructive: #dc2626;
-  --border: #dbeafe;
-  --input: #94a3b8;
-  --ring: #2563eb;
+  color-scheme: dark;
+  --radius: 0.75rem;
+  --background: #050c1a;
+  --foreground: #dde6f0;
+  --card: #0c1a2e;
+  --card-foreground: #eef7ff;
+  --popover: #0f1e35;
+  --popover-foreground: #eef7ff;
+  --primary: #0ea2bd;
+  --primary-hover: #1ec3e0;
+  --primary-foreground: #021018;
+  --secondary: #102a40;
+  --secondary-foreground: #8eeafa;
+  --muted: #0a1628;
+  --muted-foreground: #8da0b9;
+  --accent: #10283d;
+  --accent-foreground: #ecfbff;
+  --destructive: #f87171;
+  --border: rgba(30, 195, 224, 0.17);
+  --input: rgba(142, 234, 250, 0.28);
+  --ring: #1ec3e0;
 }
 
 @theme inline {
@@ -69,7 +69,102 @@
   }
 
   h1,
-  h2 {
-    font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #ffffff;
+    font-family: var(--font-serif), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background: rgba(30, 195, 224, 0.3);
+    color: #ffffff;
+  }
+}
+
+@layer utilities {
+  .tech-grid {
+    background-image:
+      linear-gradient(rgba(30, 195, 224, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 195, 224, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .cyan-text-gradient {
+    background: linear-gradient(130deg, #0ea2bd, #00d4ff);
+    background-clip: text;
+    color: transparent;
+  }
+
+  .cyan-line {
+    background: linear-gradient(90deg, transparent, #1ec3e0, transparent);
+  }
+}
+
+.orbital-ring {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  border: 1px solid rgba(30, 195, 224, 0.16);
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+}
+
+.orbital-ring::before {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #1ec3e0;
+  box-shadow: 0 0 16px rgba(30, 195, 224, 0.9);
+  content: "";
+}
+
+.orbital-ring-one {
+  width: 15rem;
+  height: 15rem;
+  animation: orbit-spin 24s linear infinite;
+}
+
+.orbital-ring-two {
+  width: 21rem;
+  height: 21rem;
+  border-color: rgba(30, 195, 224, 0.09);
+  animation: orbit-spin-reverse 38s linear infinite;
+}
+
+.orbital-ring-three {
+  width: 27rem;
+  height: 27rem;
+  border-color: rgba(30, 195, 224, 0.05);
+  animation: orbit-spin 52s linear infinite;
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-reverse {
+  from {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbital-ring-one,
+  .orbital-ring-two,
+  .orbital-ring-three {
+    animation: none;
   }
 }

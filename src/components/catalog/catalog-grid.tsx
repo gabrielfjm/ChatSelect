@@ -10,7 +10,7 @@ export function CatalogGrid({
 }) {
   if (instruments.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-12 text-center">
+      <div className="rounded-xl border border-dashed border-cyan-300/20 bg-cyan-300/[0.03] p-12 text-center">
         <p className="font-medium">Nenhum instrumento encontrado</p>
         <p className="text-muted-foreground text-sm">
           Tente ajustar os filtros ou o termo de busca.

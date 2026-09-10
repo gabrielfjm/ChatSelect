@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Open_Sans, Poppins } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import "./globals.css";
 
-const bodyFont = Inter({
+const bodyFont = Open_Sans({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
-const headingFont = Source_Serif_4({
+const headingFont = Poppins({
   variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "ChatSelect — Catálogo de Instrumentos de Avaliação",
+    default: "ChatSelect — Avaliação de chatbots educacionais",
     template: "%s | ChatSelect",
   },
   description:
-    "Catálogo de instrumentos de avaliação (questionários, escalas, entrevistas, rubricas) usados em pesquisas sobre chatbots educacionais.",
+    "Encontre e compare instrumentos científicos para avaliar chatbots educacionais.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

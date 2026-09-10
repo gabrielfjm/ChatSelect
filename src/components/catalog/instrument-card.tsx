@@ -24,7 +24,7 @@ export function InstrumentCard({
     : `/instrumentos/${instrument.slug}`;
   return (
     <Link href={href} className="group block h-full">
-      <Card className="flex h-full flex-col shadow-[0_2px_6px_rgba(29,78,216,0.08)] transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(29,78,216,0.18)]">
+      <Card className="relative flex h-full flex-col overflow-hidden border-cyan-300/15 shadow-[0_2px_8px_rgba(0,0,0,0.18)] transition-all before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-cyan-300 before:to-transparent before:opacity-0 hover:-translate-y-1 hover:border-cyan-300/35 hover:shadow-[0_12px_32px_rgba(14,162,189,0.11)] hover:before:opacity-100">
         <CardHeader>
           {instrument.category && (
             <Badge
@@ -36,7 +36,7 @@ export function InstrumentCard({
               {instrument.category}
             </Badge>
           )}
-          <CardTitle className="group-hover:text-primary font-serif text-base transition-colors">
+          <CardTitle className="font-serif text-base leading-snug transition-colors group-hover:text-cyan-300">
             {instrument.title}
           </CardTitle>
           {instrument.description && (

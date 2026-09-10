@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Bot, Menu, X } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
+  { href: "/", label: "Início" },
   { href: "/instrumentos", label: "Catálogo" },
-  { href: "/ad-hoc", label: "Instrumentos personalizados" },
-  { href: "/solicitar", label: "Solicitar instrumento" },
+  { href: "/ad-hoc", label: "Ad Hoc" },
+  { href: "/solicitar", label: "Sugerir" },
   { href: "/sobre", label: "Sobre" },
 ] as const;
 
@@ -20,28 +21,41 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0F172A]">
-      <Container className="flex items-center justify-between gap-4 py-3">
-        <Link href="/" className="leading-tight" onClick={() => setOpen(false)}>
-          <span className="block text-lg font-semibold tracking-tight text-white">
-            ChatSelect
+    <header className="sticky top-0 z-40 border-b border-cyan-300/10 bg-[#050c1a]/90 backdrop-blur-xl">
+      <Container className="flex min-h-18 items-center justify-between gap-4 py-3">
+        <Link
+          href="/"
+          className="group flex items-center gap-3"
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex size-10 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-300 shadow-[0_0_24px_rgba(14,162,189,0.12)] transition-colors group-hover:border-cyan-300/40">
+            <Bot className="size-5" aria-hidden="true" />
           </span>
-          <span className="hidden text-xs text-blue-200 sm:block">
-            Catálogo de instrumentos para avaliação de chatbots educacionais
+          <span className="leading-tight">
+            <span className="block font-serif text-lg font-bold tracking-tight text-white">
+              Chat<span className="text-cyan-400">Select</span>
+            </span>
+            <span className="text-muted-foreground hidden text-[0.7rem] tracking-wide sm:block">
+              Evidências para avaliar chatbots educacionais
+            </span>
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <nav className="hidden gap-6 text-sm font-medium md:flex">
+        <div className="flex items-center gap-3">
+          <nav className="hidden items-center gap-1 lg:flex">
             {NAV_ITEMS.map((item) => {
-              const active = pathname === item.href;
+              const active =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(`${item.href}/`));
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "border-b-2 border-transparent pb-1 transition-colors",
-                    active ? "border-white text-white" : "text-blue-200 hover:text-white",
+                    "rounded-lg px-3 py-2 text-xs font-semibold tracking-wide uppercase transition-colors",
+                    active
+                      ? "bg-cyan-300/10 text-cyan-300"
+                      : "text-slate-300/80 hover:bg-white/5 hover:text-white",
                   )}
                 >
                   {item.label}
@@ -50,10 +64,17 @@ export function SiteHeader() {
             })}
           </nav>
 
+          <Button asChild className="hidden rounded-lg sm:flex lg:ml-2">
+            <Link href="/instrumentos">
+              Explorar catálogo
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </Button>
+
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/10 hover:text-white md:hidden"
+            className="border border-cyan-300/15 text-white hover:bg-cyan-300/10 hover:text-white lg:hidden"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -65,26 +86,37 @@ export function SiteHeader() {
       </Container>
 
       {open && (
-        <nav id="mobile-nav" className="border-t border-white/20 md:hidden">
-          <Container className="flex flex-col gap-1 py-3">
+        <nav
+          id="mobile-nav"
+          className="border-t border-cyan-300/10 bg-[#071225] lg:hidden"
+        >
+          <Container className="flex flex-col gap-1 py-4">
             {NAV_ITEMS.map((item) => {
-              const active = pathname === item.href;
+              const active =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(`${item.href}/`));
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "rounded-md px-2 py-2 text-sm font-medium transition-colors",
+                    "rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
                     active
-                      ? "bg-white/10 text-white"
-                      : "text-blue-200 hover:bg-white/10 hover:text-white",
+                      ? "bg-cyan-300/10 text-cyan-300"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white",
                   )}
                 >
                   {item.label}
                 </Link>
               );
             })}
+            <Button asChild className="mt-2 sm:hidden">
+              <Link href="/instrumentos" onClick={() => setOpen(false)}>
+                Explorar catálogo
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
           </Container>
         </nav>
       )}
