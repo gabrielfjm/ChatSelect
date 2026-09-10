@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FACET_KEYS } from "@/core/models/catalog-query";
@@ -20,6 +21,7 @@ export function SearchBar({
   state: CatalogUrlState;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   return (
     <form
@@ -28,6 +30,23 @@ export function SearchBar({
       method="get"
       className="flex flex-col gap-2 sm:flex-row"
       role="search"
+      onSubmit={(event) => {
+        event.preventDefault();
+
+        const params = new URLSearchParams();
+        const formData = new FormData(event.currentTarget);
+
+        formData.forEach((value, key) => {
+          if (typeof value === "string" && value !== "") {
+            params.append(key, value);
+          }
+        });
+
+        const queryString = params.toString();
+        router.push(queryString ? `${action}?${queryString}` : action, {
+          scroll: false,
+        });
+      }}
     >
       {FACET_KEYS.flatMap((key) =>
         (state[key] ?? []).map((value) => (

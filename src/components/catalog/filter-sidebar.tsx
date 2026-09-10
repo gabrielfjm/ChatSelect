@@ -33,6 +33,7 @@ function ToggleOption({
   return (
     <Link
       href={href}
+      scroll={false}
       aria-pressed={active}
       className={cn(
         "hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
@@ -73,6 +74,7 @@ export function FilterSidebar({
         </h2>
         <Link
           href={hrefClearAll(basePath)}
+          scroll={false}
           className="text-primary hover:text-primary-hover text-xs hover:underline"
         >
           Limpar
