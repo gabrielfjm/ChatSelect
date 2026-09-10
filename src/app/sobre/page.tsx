@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { BookOpen, Database, Mail, Search, User } from "lucide-react";
 import { Container } from "@/components/layout/container";
+import { withBasePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -136,7 +137,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <a
-              href="/assets/artigo-chatselect.pdf"
+              href={withBasePath("/assets/artigo-chatselect.pdf")}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-bold text-cyan-300 hover:text-cyan-200"

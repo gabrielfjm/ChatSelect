@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Container } from "@/components/layout/container";
+import { withBasePath } from "@/lib/base-path";
 
 export function SiteFooter() {
   return (
@@ -45,7 +46,7 @@ export function SiteFooter() {
             Dados extraídos de estudos científicos e revisados manualmente.
           </p>
           <a
-            href="/assets/artigo-chatselect.pdf"
+            href={withBasePath("/assets/artigo-chatselect.pdf")}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300"
