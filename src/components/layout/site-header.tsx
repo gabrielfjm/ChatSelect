@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Bot, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,9 +29,10 @@ export function SiteHeader() {
           className="group flex items-center gap-3"
           onClick={() => setOpen(false)}
         >
-          <span className="flex size-10 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-300 shadow-[0_0_24px_rgba(14,162,189,0.12)] transition-colors group-hover:border-cyan-300/40">
-            <Bot className="size-5" aria-hidden="true" />
-          </span>
+          <BrandMark
+            decorative
+            className="size-10 transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
+          />
           <span className="leading-tight">
             <span className="block font-serif text-lg font-bold tracking-tight text-white">
               Chat<span className="text-cyan-400">Select</span>
@@ -63,13 +65,6 @@ export function SiteHeader() {
               );
             })}
           </nav>
-
-          <Button asChild className="hidden rounded-lg sm:flex lg:ml-2">
-            <Link href="/instrumentos">
-              Explorar catálogo
-              <ArrowRight aria-hidden="true" />
-            </Link>
-          </Button>
 
           <Button
             variant="ghost"
@@ -111,12 +106,6 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <Button asChild className="mt-2 sm:hidden">
-              <Link href="/instrumentos" onClick={() => setOpen(false)}>
-                Explorar catálogo
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
           </Container>
         </nav>
       )}

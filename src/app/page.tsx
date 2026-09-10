@@ -14,6 +14,7 @@ import {
   Tags,
 } from "lucide-react";
 import { Container } from "@/components/layout/container";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Button } from "@/components/ui/button";
 import { getAllInstruments } from "@/lib/catalog/instruments-repository";
 import { filterByClassification } from "@/lib/catalog/catalog-service";
@@ -49,12 +50,45 @@ const PROCESS_STEPS = [
 ] as const;
 
 const METADATA_ITEMS = [
-  { label: "Atributos de qualidade", icon: CheckCircle2 },
-  { label: "Modalidade de comunicação", icon: MessageSquare },
-  { label: "Idiomas e traduções", icon: Globe2 },
-  { label: "Evidências de validação", icon: BookOpen },
-  { label: "Categoria do instrumento", icon: Tags },
-  { label: "Fonte bibliográfica", icon: Database },
+  {
+    label: "Atributos de qualidade",
+    icon: CheckCircle2,
+    tone: "border-cyan-300/20 bg-cyan-300/10 text-cyan-300",
+  },
+  {
+    label: "Modalidade de comunicação",
+    icon: MessageSquare,
+    tone: "border-violet-300/20 bg-violet-300/10 text-violet-300",
+  },
+  {
+    label: "Idiomas e traduções",
+    icon: Globe2,
+    tone: "border-emerald-300/20 bg-emerald-300/10 text-emerald-300",
+  },
+  {
+    label: "Evidências de validação",
+    icon: BookOpen,
+    tone: "border-amber-300/20 bg-amber-300/10 text-amber-300",
+  },
+  {
+    label: "Categoria do instrumento",
+    icon: Tags,
+    tone: "border-rose-300/20 bg-rose-300/10 text-rose-300",
+  },
+  {
+    label: "Fonte bibliográfica",
+    icon: Database,
+    tone: "border-blue-300/20 bg-blue-300/10 text-blue-300",
+  },
+] as const;
+
+const RESEARCH_SIGNALS = [
+  "Usabilidade",
+  "Aceitação",
+  "Satisfação",
+  "Engajamento",
+  "Qualidade do diálogo",
+  "Efetividade pedagógica",
 ] as const;
 
 export default function HomePage() {
@@ -65,11 +99,13 @@ export default function HomePage() {
   return (
     <>
       <section className="tech-grid relative isolate overflow-hidden border-b border-cyan-300/10 bg-[radial-gradient(ellipse_70%_55%_at_18%_30%,rgba(14,162,189,0.11),transparent_68%),linear-gradient(145deg,#020818_0%,#050c1a_52%,#06122a_100%)]">
+        <div className="hero-aurora hero-aurora-one" aria-hidden="true" />
+        <div className="hero-aurora hero-aurora-two" aria-hidden="true" />
         <div className="cyan-line absolute inset-x-0 bottom-0 h-px opacity-60" />
         <Container className="grid min-h-[calc(100svh-4.5rem)] items-center gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="relative z-10 max-w-3xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-bold tracking-[0.13em] text-cyan-300 uppercase">
-              <span className="size-2 animate-pulse rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(30,195,224,0.85)]" />
+              <span className="size-2 animate-pulse rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(30,195,224,0.85)] motion-reduce:animate-none" />
               Seleção baseada em evidências
             </div>
 
@@ -141,10 +177,8 @@ export default function HomePage() {
             <div className="orbital-ring orbital-ring-two" />
             <div className="orbital-ring orbital-ring-one" />
 
-            <div className="relative z-10 flex size-44 flex-col items-center justify-center rounded-full border border-cyan-300/25 bg-[#09182c]/90 text-center shadow-[0_0_70px_rgba(14,162,189,0.22)] backdrop-blur-xl">
-              <div className="mb-3 flex size-12 items-center justify-center rounded-xl border border-cyan-300/25 bg-cyan-300/10 text-cyan-300">
-                <Search className="size-6" />
-              </div>
+            <div className="hero-core relative z-10 flex size-44 flex-col items-center justify-center rounded-full border border-cyan-300/25 bg-[#09182c]/90 text-center shadow-[0_0_70px_rgba(14,162,189,0.22)] backdrop-blur-xl">
+              <BrandMark decorative className="mb-3 size-14" />
               <p className="font-serif text-lg font-bold text-white">
                 ChatSelect
               </p>
@@ -153,7 +187,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="absolute top-[14%] left-[3%] z-20 w-44 rounded-xl border border-cyan-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
+            <div className="floating-card floating-card-one absolute top-[14%] left-[3%] z-20 w-44 rounded-xl border border-cyan-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
               <p className="text-[0.65rem] font-bold tracking-wider text-cyan-300 uppercase">
                 Atributo
               </p>
@@ -161,30 +195,50 @@ export default function HomePage() {
                 Usabilidade
               </p>
             </div>
-            <div className="absolute top-[25%] right-[-2%] z-20 w-44 rounded-xl border border-cyan-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
-              <p className="text-[0.65rem] font-bold tracking-wider text-cyan-300 uppercase">
+            <div className="floating-card floating-card-two absolute top-[25%] right-[-2%] z-20 w-44 rounded-xl border border-violet-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
+              <p className="text-[0.65rem] font-bold tracking-wider text-violet-300 uppercase">
                 Modalidade
               </p>
               <p className="mt-1 text-sm font-semibold text-white">
                 Texto e voz
               </p>
             </div>
-            <div className="absolute right-[10%] bottom-[12%] z-20 w-48 rounded-xl border border-cyan-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
-              <p className="text-[0.65rem] font-bold tracking-wider text-cyan-300 uppercase">
+            <div className="floating-card floating-card-three absolute right-[10%] bottom-[12%] z-20 w-48 rounded-xl border border-emerald-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
+              <p className="text-[0.65rem] font-bold tracking-wider text-emerald-300 uppercase">
                 Evidência
               </p>
               <p className="mt-1 text-sm font-semibold text-white">
                 Validação documentada
               </p>
             </div>
-            <div className="absolute bottom-[20%] left-[-1%] z-20 w-40 rounded-xl border border-cyan-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
-              <p className="text-[0.65rem] font-bold tracking-wider text-cyan-300 uppercase">
+            <div className="floating-card floating-card-four absolute bottom-[20%] left-[-1%] z-20 w-40 rounded-xl border border-amber-300/20 bg-[#0c1a2e]/90 p-4 shadow-[0_12px_35px_rgba(0,0,0,0.28)] backdrop-blur-md">
+              <p className="text-[0.65rem] font-bold tracking-wider text-amber-300 uppercase">
                 Idioma
               </p>
               <p className="mt-1 text-sm font-semibold text-white">Português</p>
             </div>
           </div>
         </Container>
+      </section>
+
+      <section
+        className="signal-strip overflow-hidden border-b border-cyan-300/10 bg-[#06101f] py-4"
+        aria-label="Dimensões encontradas no catálogo"
+      >
+        <div className="signal-track flex w-max items-center gap-3">
+          {[...RESEARCH_SIGNALS, ...RESEARCH_SIGNALS].map((signal, index) => (
+            <div
+              key={`${signal}-${index}`}
+              aria-hidden={index >= RESEARCH_SIGNALS.length}
+              className="flex items-center gap-3 rounded-full border border-white/8 bg-white/[0.035] px-4 py-2"
+            >
+              <span className="size-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(30,195,224,0.8)]" />
+              <span className="text-xs font-semibold tracking-wide text-slate-300 uppercase">
+                {signal}
+              </span>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="bg-[#080f1e] py-20 sm:py-24">
@@ -199,7 +253,7 @@ export default function HomePage() {
               </h2>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
-              <div className="rounded-2xl border border-cyan-300/10 bg-[#0c1a2e] p-6">
+              <div className="life-card rounded-2xl border border-cyan-300/10 bg-[#0c1a2e] p-6">
                 <p className="mb-3 font-serif text-lg font-bold text-white">
                   Informação dispersa
                 </p>
@@ -209,7 +263,7 @@ export default function HomePage() {
                   localizar e comparar alternativas.
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-cyan-300/25 bg-cyan-300/[0.06] p-6">
+              <div className="life-card relative overflow-hidden rounded-2xl border border-cyan-300/25 bg-cyan-300/[0.06] p-6">
                 <div className="cyan-line absolute inset-x-0 top-0 h-px" />
                 <p className="mb-3 font-serif text-lg font-bold text-white">
                   Decisão estruturada
@@ -245,7 +299,7 @@ export default function HomePage() {
               return (
                 <article
                   key={step.number}
-                  className="group relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#0c1a2e] p-7 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/35 hover:shadow-[0_14px_40px_rgba(14,162,189,0.09)]"
+                  className="life-card group relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-[#0c1a2e] p-7 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/35 hover:shadow-[0_14px_40px_rgba(14,162,189,0.09)]"
                 >
                   <div className="cyan-line absolute inset-x-0 top-0 h-px opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="mb-8 flex items-center justify-between">
@@ -299,9 +353,11 @@ export default function HomePage() {
               return (
                 <div
                   key={item.label}
-                  className="flex items-center gap-4 rounded-xl border border-cyan-300/12 bg-[#0c1a2e] p-4"
+                  className="life-card flex items-center gap-4 rounded-xl border border-cyan-300/12 bg-[#0c1a2e] p-4 transition-transform duration-300 hover:-translate-y-0.5"
                 >
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-300">
+                  <span
+                    className={`flex size-10 shrink-0 items-center justify-center rounded-lg border ${item.tone}`}
+                  >
                     <Icon className="size-4.5" aria-hidden="true" />
                   </span>
                   <span className="text-sm font-semibold text-slate-200">
@@ -326,7 +382,7 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
-            <article className="relative overflow-hidden rounded-2xl border border-cyan-300/25 bg-cyan-300/[0.06] p-7 sm:p-8">
+            <article className="life-card relative overflow-hidden rounded-2xl border border-cyan-300/25 bg-cyan-300/[0.06] p-7 sm:p-8">
               <div className="cyan-line absolute inset-x-0 top-0 h-px" />
               <div className="mb-6 flex items-center justify-between">
                 <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-3 py-1 text-xs font-bold text-cyan-300 uppercase">
@@ -350,7 +406,7 @@ export default function HomePage() {
               </Link>
             </article>
 
-            <article className="rounded-2xl border border-cyan-300/12 bg-[#0c1a2e] p-7 sm:p-8">
+            <article className="life-card rounded-2xl border border-cyan-300/12 bg-[#0c1a2e] p-7 sm:p-8">
               <div className="mb-6 flex items-center justify-between">
                 <span className="rounded-full border border-slate-400/20 bg-slate-400/10 px-3 py-1 text-xs font-bold text-slate-300 uppercase">
                   Coleção contextual

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Bot, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { BrandMark } from "@/components/brand/brand-mark";
 import { Container } from "@/components/layout/container";
 
 export function SiteFooter() {
@@ -8,9 +9,7 @@ export function SiteFooter() {
       <Container className="grid gap-10 py-12 md:grid-cols-[1.4fr_0.6fr_0.8fr]">
         <div className="max-w-md">
           <div className="mb-4 flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-lg border border-cyan-300/20 bg-cyan-300/10 text-cyan-300">
-              <Bot className="size-5" aria-hidden="true" />
-            </span>
+            <BrandMark decorative className="size-9 rounded-xl" />
             <span className="font-serif text-lg font-bold text-white">
               Chat<span className="text-cyan-400">Select</span>
             </span>
@@ -46,7 +45,7 @@ export function SiteFooter() {
             Dados extraídos de estudos científicos e revisados manualmente.
           </p>
           <a
-            href="/assets/wbots.pdf"
+            href="/assets/artigo-chatselect.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300"

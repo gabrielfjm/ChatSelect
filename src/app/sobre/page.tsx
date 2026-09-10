@@ -136,7 +136,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <a
-              href="/assets/wbots.pdf"
+              href="/assets/artigo-chatselect.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-bold text-cyan-300 hover:text-cyan-200"
