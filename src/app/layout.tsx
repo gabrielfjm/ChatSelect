@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { getAdHocSlugs } from "@/lib/catalog/instruments-repository";
+import { getAdminUser } from "@/lib/auth/admin";
 import "./globals.css";
 
 const bodyFont = Inter({
@@ -23,7 +25,19 @@ export const metadata: Metadata = {
     "Catálogo de instrumentos de avaliação (questionários, escalas, entrevistas, rubricas) usados em pesquisas sobre chatbots educacionais.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+// Fichas live in the database and change whenever an admin approves or edits
+// one, so every route renders per request instead of being frozen at build.
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Only used to highlight the header's active item, so a database hiccup
+  // here shouldn't take down pages that don't need the catalog (e.g. /sobre).
+  const [adHocSlugs, admin] = await Promise.all([
+    getAdHocSlugs().catch(() => []),
+    // Header login badge only — never used for authorization.
+    getAdminUser().catch(() => null),
+  ]);
+
   return (
     <html
       lang="pt-BR"
@@ -36,7 +50,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Pular para o conteúdo
         </a>
-        <SiteHeader />
+        <SiteHeader
+          adHocSlugs={adHocSlugs}
+          admin={admin ? { email: admin.email, name: admin.name } : null}
+        />
         <main id="main-content" className="flex-1">
           {children}
         </main>

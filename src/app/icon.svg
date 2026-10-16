@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Same mark as src/components/brand/brand-mark.tsx, flattened into a
+       standalone file for the browser tab icon. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17c6df" />
+      <stop offset="0.58" stop-color="#087d9d" />
+      <stop offset="1" stop-color="#07506e" />
+    </linearGradient>
+  </defs>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="17" fill="url(#bg)" stroke="#a5f3fc" stroke-opacity="0.3" stroke-width="1.5" />
+  <g transform="translate(8.96 8.96) scale(0.96)" color="#fff">
+    <path
+      d="M13.5 10.5h18a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-8.25l-7.75 5v-5h-2a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7Z"
+      fill="rgba(2,16,24,.28)"
+      stroke="currentColor"
+      stroke-width="2.6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="m15.5 22.75 5.1 4.8 10.2-10.1"
+      stroke="currentColor"
+      stroke-width="3.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="38.5" cy="10" r="3" fill="#8eebfa" />
+  </g>
+</svg>

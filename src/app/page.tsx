@@ -53,8 +53,8 @@ const PROCESS_STEPS = [
   },
 ] as const;
 
-export default function HomePage() {
-  const all = getAllInstruments();
+export default async function HomePage() {
+  const all = await getAllInstruments();
   const adHocCount = filterByClassification(all, "ad-hoc").length;
   const validatedCount = all.length - adHocCount;
 
@@ -67,8 +67,8 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto max-w-2xl text-base text-blue-200 sm:text-lg">
             O ChatSelect transforma evidências dispersas na literatura em um
-            catálogo claro e comparável — para você selecionar instrumentos
-            com mais agilidade, critério e transparência.
+            catálogo claro e comparável — para você selecionar instrumentos com
+            mais agilidade, critério e transparência.
           </p>
           <Button asChild size="lg" className="rounded-full">
             <Link href="/instrumentos">Explorar catálogo</Link>
@@ -197,8 +197,7 @@ export default function HomePage() {
                 <p className="text-lg font-bold">Instrumentos Ad Hoc</p>
                 <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   Instrumentos criados para um estudo específico, úteis para
-                  compreender abordagens contextuais ainda sem validação
-                  formal.
+                  compreender abordagens contextuais ainda sem validação formal.
                 </p>
                 <Link
                   href="/ad-hoc"

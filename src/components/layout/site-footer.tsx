@@ -57,7 +57,12 @@ export function SiteFooter() {
       </Container>
       <Container className="flex flex-col gap-2 border-t border-white/10 py-5 text-xs text-blue-200 sm:flex-row sm:items-center sm:justify-between">
         <p>© 2026 ChatSelect</p>
-        <p>Pesquisa aberta, seleção mais fundamentada.</p>
+        <p>
+          Pesquisa aberta, seleção mais fundamentada. ·{" "}
+          <Link href="/admin" className="hover:text-white">
+            Área do administrador
+          </Link>
+        </p>
       </Container>
     </footer>
   );

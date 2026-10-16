@@ -9,23 +9,20 @@ ChatSelect ajuda pesquisadores a escolher qual instrumento usar para avaliar um 
 ## Stack
 
 - **Next.js 16** (App Router, TypeScript) + **Tailwind CSS v4** + **shadcn/ui**
-- **Sem banco de dados**: site estático. Os dados vêm de um CSV, transformados em JSON em tempo de build
+- **Supabase** (Postgres + Auth): as fichas ficam no banco; o público envia solicitações e o admin aprova/edita/exclui em `/admin`
 - **Zod** para validação
 - **Vitest** para testes
-- **Formspree** para o formulário de solicitação de instrumentos (sem backend próprio), enviado via `fetch` (sem reload/redirect da página)
 - **Tradução nativa do navegador** (nenhuma dependência) — ver seção [Internacionalização](#internacionalização)
 
 ## Arquitetura
 
 ```
-data/Fichas_Instrumentos_Avaliacao.csv   ← fonte dos dados (editável)
-        │
-        ▼  npm run build:catalog (scripts/build-catalog.ts)
-src/data/instruments.generated.json       ← gerado, não versionado
+Supabase: tabela public.instruments (supabase/schema.sql)
+  status = pending | approved | rejected
         │
         ▼
-src/lib/catalog/instruments-repository.ts ← único ponto que importa o JSON
-        │
+src/lib/catalog/instruments-repository.ts ← único ponto que acessa a tabela
+        │                                   (páginas públicas só recebem `approved`)
         ▼
 src/lib/catalog/catalog-service.ts        ← funções puras (busca, filtro, ordenação)
         │
@@ -33,7 +30,30 @@ src/lib/catalog/catalog-service.ts        ← funções puras (busca, filtro, or
 src/app/**                                ← páginas (View)
 ```
 
-`npm run dev` e `npm run build` regeneram o catálogo automaticamente antes de rodar — não é preciso rodar o script manualmente no dia a dia.
+Todas as rotas são renderizadas por requisição (`dynamic = "force-dynamic"` no layout raiz), então uma ficha aprovada aparece no site na hora — sem novo deploy.
+
+O CSV `data/Fichas_Instrumentos_Avaliacao.csv` continua no repositório, mas agora só como **carga inicial** do banco (`npm run db:seed`).
+
+## Fluxo de solicitação e aprovação
+
+1. Qualquer pessoa preenche a ficha em **`/solicitar`** (só nome e descrição são obrigatórios). O registro entra no banco com status `pending` e **não aparece no site**.
+2. O admin entra em **`/admin`** (link "Área do administrador" no rodapé), vê as solicitações pendentes, completa/corrige os campos e clica em **Aprovar e publicar** → a ficha passa a aparecer no catálogo (ou em Ad Hoc, conforme a classificação).
+3. Também no painel: **Rejeitar** (fica guardada, fora do site), **Despublicar** (volta para pendente), **Excluir** (definitivo) e **Novo instrumento** (o admin cadastra direto, publicado ou como rascunho).
+
+## Administradores
+
+Em **`/admin/administradores`** qualquer admin cadastra, edita (nome, e-mail, senha) e remove outros admins. Em **"Minha conta"** cada um troca a própria senha.
+
+- As contas ficam no **Supabase Auth**. Quem é admin é marcado em `app_metadata.role = "admin"`, um campo que só o servidor (chave secreta) consegue gravar. Não há tabela própria para isso.
+- Os e-mails em **`ADMIN_EMAILS`** são admins **fixos**: continuam admins mesmo sem a marcação, não podem ser removidos nem ter o e-mail trocado pelo painel. Servem de garantia de acesso caso todos os outros sejam removidos.
+- Proteções: ninguém remove a própria conta e o último admin nunca é removido.
+- Ao cadastrar alguém, o admin define uma **senha inicial** (há um botão "Gerar senha forte") e a passa para a pessoa por um canal seguro. Não há envio de e-mail.
+
+Segurança:
+
+- A tabela tem RLS ligado e nenhuma policy: a chave pública do Supabase não lê nem grava nada. Todo acesso passa pelo servidor do Next.js com a chave secreta (`SUPABASE_SERVICE_ROLE_KEY`, nunca enviada ao navegador).
+- Admin = usuário do Supabase Auth com `app_metadata.role = "admin"` **ou** com e-mail em `ADMIN_EMAILS` (`src/lib/auth/admin-role.ts`). Cada página e cada Server Action do painel verifica isso de novo (`requireAdmin()` em `src/lib/auth/admin.ts`).
+- O formulário público valida tudo no servidor (Zod, `src/lib/catalog/instrument-form.ts`), só aceita links `http(s)://` e tem um campo honeypot contra spam simples. O e-mail de quem enviou só aparece no painel.
 
 ## Instrumentos Adaptado/Original vs. Ad-hoc
 
@@ -52,17 +72,20 @@ npm install
 npm run dev   # http://localhost:3000 (ou a próxima porta livre)
 ```
 
-## Como atualizar o catálogo com novos instrumentos
+## Configurando o banco (uma vez)
 
-1. Edite `data/Fichas_Instrumentos_Avaliacao.csv` (mesmas 22 colunas) ou substitua o arquivo por um export mais novo da planilha.
-2. Se o instrumento novo for **ad-hoc**, adicione o nome da aba (`Nome_Aba`) a `KNOWN_AD_HOC_SHEET_NAMES` em `src/core/models/known-classification.ts` (ou a `KNOWN_ADAPTED_SHEET_NAMES` se for adaptado/original). Sem isso, a classificação é estimada por texto (procura "ad-hoc" nos campos) e o build avisa no console para você revisar.
-3. Rode `npm run build:catalog` (ou apenas `npm run dev`) para regenerar o catálogo.
+1. Crie um projeto em [supabase.com](https://supabase.com) (o plano gratuito basta).
+2. No **SQL Editor**, rode o conteúdo de `supabase/schema.sql`.
+3. Copie `.env.example` para `.env.local` e preencha com os valores de **Project Settings → API** e os e-mails dos admins.
+4. Em **Authentication → Users → Add user**, crie o usuário (e-mail + senha, marcando "Auto Confirm User") do admin listado em `ADMIN_EMAILS`. Os demais admins podem ser cadastrados depois pelo próprio painel. Desative "Allow new users to sign up" em **Authentication → Sign In / Providers** — o login do painel não precisa de cadastro aberto.
+5. Rode `npm run db:seed` para importar as 41 fichas do CSV como publicadas.
+6. Na Vercel, cadastre as mesmas 4 variáveis em **Settings → Environment Variables** e faça o deploy.
 
-O script valida o CSV inteiro com Zod e falha alto (com mensagem clara) se algum campo obrigatório faltar ou se houver slug duplicado.
+`npm run db:seed` só insere fichas cujo slug ainda não existe no banco — rodar de novo não apaga nem sobrescreve edições feitas no painel. Para forçar o conteúdo do CSV por cima do banco: `npm run db:seed -- --overwrite`.
 
-## Solicitar instrumento
+## Como adicionar instrumentos
 
-A aba "Solicitar instrumento" (`/solicitar`) é um formulário nativo (`src/components/request/request-instrument-form.tsx`, client component) com os mesmos componentes de UI do resto do site — nada de iframe ou redirecionamento para fora do app. O envio é feito via `fetch` para o endpoint do Formspree (`FORMSPREE_ENDPOINT`, hardcoded no componente — não é um segredo, já que é usado no navegador de qualquer forma), com `Accept: application/json` para receber uma resposta JSON em vez do redirecionamento padrão do Formspree. Em caso de sucesso, o formulário é substituído por uma mensagem de confirmação; em caso de falha, uma mensagem de erro aparece acima do botão de envio sem limpar os campos já preenchidos. Para trocar o formulário/conta do Formspree, edite a constante `FORMSPREE_ENDPOINT` nesse arquivo. Não há variáveis de ambiente necessárias no projeto no momento.
+Pelo painel `/admin` (ou aprovando uma solicitação de `/solicitar`). Não é mais necessário editar CSV, HTML nem fazer deploy.
 
 ## Internacionalização
 
@@ -76,16 +99,17 @@ Já testamos e descartamos duas alternativas nesta mesma base antes de chegar aq
 
 | Script                 | Ação                                          |
 | ----------------------- | ---------------------------------------------- |
-| `npm run dev`           | `build:catalog` + servidor de desenvolvimento |
-| `npm run build`         | `build:catalog` + build de produção           |
-| `npm run build:catalog` | Regenera `src/data/instruments.generated.json` a partir do CSV |
-| `npm run typecheck`     | Checagem de tipos (regenera o catálogo antes) |
+| `npm run dev`           | Servidor de desenvolvimento (precisa do `.env.local`) |
+| `npm run build`         | Build de produção                             |
+| `npm run db:seed`       | Importa o CSV para o banco (ver acima)        |
+| `npm run typecheck`     | Checagem de tipos                             |
 | `npm run lint`          | ESLint                                        |
-| `npm run test`          | Testes (Vitest) — 25 testes, cobrindo o mapeamento CSV→Instrument e os filtros do catálogo |
+| `npm run test`          | Testes (Vitest) — 54 testes, cobrindo o mapeamento CSV→Instrument, os filtros do catálogo, a validação dos formulários de ficha e de administrador, a regra de quem é admin e o mapeamento das linhas do banco |
 | `npm run format`        | Prettier (escrita)                            |
 
 ## Deploy na Vercel
 
 1. Suba o repositório para o GitHub.
 2. Importe o repositório na Vercel (`vercel.json` já define `framework: nextjs`).
-3. Deploy. O build já regenera o catálogo a partir do CSV versionado no repositório.
+3. Cadastre as variáveis de `.env.example` em Settings → Environment Variables.
+4. Deploy. O build não acessa o banco; as páginas leem o Supabase a cada requisição.

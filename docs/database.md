@@ -1,5 +1,10 @@
 # Banco de dados do ChatSelect
 
+> **Atualização (2026-10):** as fichas agora vivem na tabela `instruments` do
+> Supabase (`supabase/schema.sql`) e são gerenciadas pelo painel `/admin`.
+> A lista abaixo é o retrato da **carga inicial** importada do CSV por
+> `npm run db:seed` — o banco pode ter mais fichas aprovadas depois disso.
+
 > Gerado a partir do estado atual de `src/data/instruments.generated.json`
 > (compilado de `data/Fichas_Instrumentos_Avaliacao.csv` via
 > `npm run build:catalog`) em 2026-09-16. Este arquivo é um retrato estático —
@@ -70,6 +75,6 @@ Listados na aba Instrumentos personalizados (`/ad-hoc`).
 
 ## Onde editar
 
-- **Dados de origem:** `data/Fichas_Instrumentos_Avaliacao.csv`
-- **Classificação fixa** (validado vs. ad hoc, quando o texto do CSV não deixa claro): `src/core/models/known-classification.ts`
-- **Regenerar o catálogo JSON:** `npm run build:catalog`
+- **No dia a dia:** painel `/admin` (aprovar solicitações, editar, criar, excluir)
+- **Carga inicial:** `data/Fichas_Instrumentos_Avaliacao.csv` → `npm run db:seed`
+- **Classificação fixa na importação** (validado vs. ad hoc, quando o texto do CSV não deixa claro): `src/core/models/known-classification.ts`

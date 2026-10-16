@@ -16,9 +16,12 @@ function buildParams(state: CatalogUrlState): URLSearchParams {
   return params;
 }
 
+/** `basePath` may already carry a query string of its own (e.g. the admin
+ * panel's `/admin?status=pending`), which is kept in front of the filters. */
 function toHref(basePath: string, params: URLSearchParams): string {
   const qs = params.toString();
-  return qs ? `${basePath}?${qs}` : basePath;
+  if (!qs) return basePath;
+  return `${basePath}${basePath.includes("?") ? "&" : "?"}${qs}`;
 }
 
 /** Toggles a single value within a facet's selection — adds it if absent,
