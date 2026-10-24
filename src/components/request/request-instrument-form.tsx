@@ -99,7 +99,7 @@ export function RequestInstrumentForm() {
       <input
         type="hidden"
         name="_subject"
-        value="Nova solicitação de instrumento — ChatSelect"
+        value="Nova solicitação de instrumento — Evalua"
       />
 
       <div className="space-y-1.5">

@@ -9,13 +9,12 @@ import { filterByClassification } from "@/lib/catalog/catalog-service";
 
 export const metadata: Metadata = {
   // Set as a full literal string rather than relying on the root layout's
-  // title template ("%s | ChatSelect") — on this Next.js version the
+  // title template ("%s | Evalua") — on this Next.js version the
   // template silently doesn't apply to the root "/" route specifically
   // (verified: every other route applies it correctly), which left the
-  // browser tab reading bare "Instrumentos" with no "ChatSelect" in sight.
-  title: "ChatSelect",
-  description:
-    "Catálogo de instrumentos para avaliação de chatbots educacionais.",
+  // browser tab reading bare "Instrumentos" with no "Evalua" in sight.
+  title: "Evalua",
+  description: "Catálogo de instrumentos de avaliação de chatbots educacionais",
 };
 
 const CHALLENGE_CARDS = [
@@ -25,7 +24,7 @@ const CHALLENGE_CARDS = [
   },
   {
     title: "Decisão estruturada",
-    text: "O ChatSelect reúne metadados comparáveis em um só ambiente e aproxima cada instrumento do contexto real da sua avaliação.",
+    text: "O Evalua reúne metadados comparáveis em um só ambiente e aproxima cada instrumento do contexto real da sua avaliação.",
   },
 ] as const;
 
@@ -66,8 +65,8 @@ export default function HomePage() {
             Encontre o instrumento certo para avaliar seu chatbot educacional.
           </h1>
           <p className="mx-auto max-w-2xl text-base text-blue-200 sm:text-lg">
-            O ChatSelect transforma evidências dispersas na literatura em um
-            catálogo claro e comparável — para você selecionar instrumentos
+            O Evalua transforma evidências dispersas na literatura em um
+            catálogo claro e comparável, para você selecionar instrumentos
             com mais agilidade, critério e transparência.
           </p>
           <Button asChild size="lg" className="rounded-full">

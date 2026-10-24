@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Sobre",
-  description: "Sobre o ChatSelect e como o catálogo foi construído.",
+  description: "Sobre o Evalua e como o catálogo foi construído.",
 };
 
 const TEAM = [
@@ -58,7 +58,7 @@ export default function AboutPage() {
     <Container className="max-w-3xl space-y-6 py-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Sobre o ChatSelect
+          Sobre o Evalua
         </h1>
         <p className="text-muted-foreground">
           Uma ferramenta web criada para apoiar pesquisadores na escolha de
@@ -78,7 +78,7 @@ export default function AboutPage() {
           distribuídas por diferentes publicações.
         </p>
         <p>
-          O ChatSelect centraliza esse conhecimento em fichas comparáveis.
+          O Evalua centraliza esse conhecimento em fichas comparáveis.
           Assim, pesquisadores podem identificar alternativas compatíveis com
           seus objetivos, consultar evidências de validação e acessar a fonte
           original de cada instrumento.
