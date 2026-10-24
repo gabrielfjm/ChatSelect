@@ -86,7 +86,7 @@ export function detectClassificationFromText(
 }
 
 /**
- * The curated fixed list (BRIEFING_CLAUDE_CODE.md section 3) reflects a
+ * The curated fixed list (defined by the research team) reflects a
  * richer judgment than a text substring can: some ad-hoc instruments never
  * literally say "ad-hoc" (e.g. Heuristic_Set_Chatbots), and some
  * adapted/original ones mention "ad hoc" only in passing about a reduced

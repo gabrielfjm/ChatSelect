@@ -1,5 +1,5 @@
 /**
- * Fixed classification fallback from BRIEFING_CLAUDE_CODE.md section 3.
+ * Fixed classification fallback curated by the research team.
  * The ingestion script auto-detects "ad-hoc" by scanning instrument fields,
  * then cross-checks the result against this list and warns on any mismatch
  * (source of truth may drift as new instruments are added).
