@@ -52,10 +52,10 @@ export function SiteHeader() {
           <BrandMark decorative className="size-10" />
           <span className="leading-tight">
             <span className="block text-lg font-semibold tracking-tight text-white">
-              ChatSelect
+              Evalua
             </span>
             <span className="hidden text-xs text-blue-200 sm:block">
-              Evidências para avaliar chatbots educacionais
+              Catálogo de instrumentos de avaliação de chatbots educacionais
             </span>
           </span>
         </Link>

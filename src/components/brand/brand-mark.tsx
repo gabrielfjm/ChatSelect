@@ -22,7 +22,7 @@ export function BrandMark({
         aria-hidden={decorative || undefined}
         role={decorative ? undefined : "img"}
       >
-        {!decorative && <title>ChatSelect</title>}
+        {!decorative && <title>Evalua</title>}
         <path
           d="M13.5 10.5h18a7 7 0 0 1 7 7v9a7 7 0 0 1-7 7h-8.25l-7.75 5v-5h-2a7 7 0 0 1-7-7v-9a7 7 0 0 1 7-7Z"
           fill="rgba(2,16,24,.28)"

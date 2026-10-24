@@ -16,11 +16,10 @@ const headingFont = Source_Serif_4({
 
 export const metadata: Metadata = {
   title: {
-    default: "ChatSelect — Catálogo de Instrumentos de Avaliação",
-    template: "%s | ChatSelect",
+    default: "Evalua",
+    template: "%s | Evalua",
   },
-  description:
-    "Catálogo de instrumentos de avaliação (questionários, escalas, entrevistas, rubricas) usados em pesquisas sobre chatbots educacionais.",
+  description: "Catálogo de instrumentos de avaliação de chatbots educacionais",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

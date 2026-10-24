@@ -11,12 +11,11 @@ export function SiteFooter() {
           <div className="mb-4 flex items-center gap-3">
             <BrandMark decorative className="size-9" />
             <span className="font-serif text-lg font-bold text-white">
-              ChatSelect
+              Evalua
             </span>
           </div>
           <p className="text-sm leading-relaxed text-blue-200">
-            Catálogo científico para apoiar a escolha de instrumentos de
-            avaliação de chatbots educacionais.
+            Catálogo de instrumentos de avaliação de chatbots educacionais
           </p>
         </div>
 
@@ -56,7 +55,7 @@ export function SiteFooter() {
         </div>
       </Container>
       <Container className="flex flex-col gap-2 border-t border-white/10 py-5 text-xs text-blue-200 sm:flex-row sm:items-center sm:justify-between">
-        <p>© 2026 ChatSelect</p>
+        <p>© 2026 Evalua</p>
         <p>Pesquisa aberta, seleção mais fundamentada.</p>
       </Container>
     </footer>
