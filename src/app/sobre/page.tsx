@@ -44,7 +44,7 @@ const RESEARCH_PILLARS = [
   {
     icon: Database,
     title: "Metadados estruturados",
-    text: "As fichas organizam descrição, atributos de qualidade, modalidade, idioma, aplicação, confiabilidade e fonte bibliográfica.",
+    text: "As fichas organizam descrição, perspectiva de qualidade, modalidade, idioma, aplicação, confiabilidade e fonte bibliográfica.",
   },
   {
     icon: Search,

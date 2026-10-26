@@ -1,4 +1,4 @@
-/** Per-category color assignments so Categoria tags are visually
+/** Per-category color assignments so Foco da avaliação tags are visually
  * distinguishable at a glance instead of all sharing the same light-blue
  * tint. Keyed by the exact Portuguese category string from the CSV. Same
  * colors back both the solid tag/pill (cards, instrument sidebar) and the

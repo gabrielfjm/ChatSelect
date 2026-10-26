@@ -11,11 +11,11 @@ import {
 import { categorySolidClasses } from "@/lib/catalog/category-colors";
 
 const FACET_LABELS: Record<FacetKey, string> = {
-  category: "Categoria",
+  category: "Foco da avaliação",
   originalLanguage: "Idioma",
   communicationModality: "Modalidade de comunicação",
-  attribute: "Atributos",
-  qualityAttribute: "Atributos de qualidade",
+  attribute: "Atributo de qualidade",
+  qualityAttribute: "Perspectiva de qualidade",
 };
 
 function ToggleOption({

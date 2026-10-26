@@ -12,7 +12,7 @@ Publicado em `origin/master` (deploy de produção em `chat-select.vercel.app`) 
 ## O que entrou nesta rodada
 
 - Destaque correto do header nas fichas de instrumentos ad hoc: `/instrumentos/[slug]` é uma rota compartilhada entre instrumentos validados e ad hoc, e o header agora resolve a seção ativa pela classificação real do instrumento (`AD_HOC_SLUGS`), não só pelo prefixo da URL. Inclui `aria-current="page"` no link ativo (desktop e mobile).
-- Texto dos cinco filtros na home: a seção "Como Funciona" agora cita os cinco filtros reais do catálogo (categoria, idioma, modalidade de comunicação, atributos, atributos de qualidade), na mesma ordem em que aparecem em `filter-sidebar.tsx`.
+- Texto dos cinco filtros na home: a seção "Como Funciona" agora cita os cinco filtros reais do catálogo (foco da avaliação, idioma, modalidade de comunicação, atributo de qualidade, perspectiva de qualidade), na mesma ordem em que aparecem em `filter-sidebar.tsx`.
 
 ## Fila pós-coleta (não entra em produção antes do fim da coleta)
 
