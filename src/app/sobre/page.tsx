@@ -44,7 +44,7 @@ const RESEARCH_PILLARS = [
   {
     icon: Database,
     title: "Metadados estruturados",
-    text: "As fichas organizam descrição, atributos de qualidade, modalidade, idioma, aplicação, confiabilidade e fonte bibliográfica.",
+    text: "As fichas organizam descrição, perspectiva de qualidade, modalidade, idioma, aplicação, confiabilidade e fonte bibliográfica.",
   },
   {
     icon: Search,
@@ -57,9 +57,7 @@ export default function AboutPage() {
   return (
     <Container className="max-w-3xl space-y-6 py-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Sobre o Evalua
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">Sobre o Evalua</h1>
         <p className="text-muted-foreground">
           Uma ferramenta web criada para apoiar pesquisadores na escolha de
           instrumentos adequados à avaliação de chatbots educacionais.
@@ -78,9 +76,9 @@ export default function AboutPage() {
           distribuídas por diferentes publicações.
         </p>
         <p>
-          O Evalua centraliza esse conhecimento em fichas comparáveis.
-          Assim, pesquisadores podem identificar alternativas compatíveis com
-          seus objetivos, consultar evidências de validação e acessar a fonte
+          O Evalua centraliza esse conhecimento em fichas comparáveis. Assim,
+          pesquisadores podem identificar alternativas compatíveis com seus
+          objetivos, consultar evidências de validação e acessar a fonte
           original de cada instrumento.
         </p>
       </section>

@@ -7,11 +7,11 @@
     "build": "npm run build:catalog && next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "npm run build:catalog && tsc --noEmit",
+    "typecheck": "npm run build:catalog && next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "node scripts/run-vitest.mjs run",
+    "test:watch": "node scripts/run-vitest.mjs",
     "build:catalog": "tsx scripts/build-catalog.ts"
   },
   "dependencies": {

@@ -71,7 +71,9 @@ export function SiteHeader() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "border-b-2 border-transparent pb-1 transition-colors",
-                    active ? "border-white text-white" : "text-blue-200 hover:text-white",
+                    active
+                      ? "border-white text-white"
+                      : "text-blue-200 hover:text-white",
                   )}
                 >
                   {item.label}

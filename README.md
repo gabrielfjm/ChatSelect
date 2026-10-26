@@ -43,7 +43,7 @@ src/app/**                                ← páginas (View)
 
 ## Filtros da página inicial
 
-Categoria, Idioma, Modalidade de comunicação, Atributos e Atributos de qualidade — cada um extrai suas opções dinamicamente dos valores presentes nos instrumentos Adaptado/Original (não do catálogo inteiro), para que nenhuma opção de filtro leve a uma lista vazia.
+Foco da avaliação, Idioma, Modalidade de comunicação, Atributo de qualidade e Perspectiva de qualidade — cada um extrai suas opções dinamicamente dos valores presentes nos instrumentos Adaptado/Original (não do catálogo inteiro), para que nenhuma opção de filtro leve a uma lista vazia.
 
 ## Rodando localmente
 

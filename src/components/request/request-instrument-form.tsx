@@ -22,9 +22,7 @@ const errorClasses = "border-destructive focus-visible:ring-destructive";
  * error is a clearly visible, styled message next to the field. */
 export function RequestInstrumentForm() {
   const [status, setStatus] = useState<Status>("idle");
-  const [fieldErrors, setFieldErrors] = useState<Set<RequiredField>>(
-    new Set(),
-  );
+  const [fieldErrors, setFieldErrors] = useState<Set<RequiredField>>(new Set());
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const canSubmit = name.trim() !== "" && description.trim() !== "";
@@ -134,7 +132,11 @@ export function RequestInstrumentForm() {
         <p className="text-muted-foreground text-xs">
           Se souber, cite os autores e o ano
         </p>
-        <Input id="authors" name="authors" placeholder="Ex.: Brooke, J. (1996)" />
+        <Input
+          id="authors"
+          name="authors"
+          placeholder="Ex.: Brooke, J. (1996)"
+        />
       </div>
 
       <div className="space-y-1.5">
@@ -202,8 +204,7 @@ export function RequestInstrumentForm() {
 
       {status === "error" && (
         <p role="alert" className="text-destructive text-sm">
-          Não foi possível enviar sua solicitação. Tente novamente em
-          instantes.
+          Não foi possível enviar sua solicitação. Tente novamente em instantes.
         </p>
       )}
 

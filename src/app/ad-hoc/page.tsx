@@ -42,13 +42,13 @@ export default async function AdHocPage({
           <h1 className="text-2xl font-bold tracking-tight">Ad Hoc</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Os instrumentos Ad Hoc são questionários, escalas ou roteiros
-            criados pelos próprios autores
-            de um estudo especificamente para aquela pesquisa, sem derivar de
-            uma fonte psicométrica validada e citável. Isso significa que, na
-            maioria dos casos, não há dados formais de confiabilidade (como
-            Alfa de Cronbach) ou validação prévia disponíveis para esses
-            instrumentos — eles foram construídos sob medida para responder às
-            necessidades do estudo específico em que foram aplicados.
+            criados pelos próprios autores de um estudo especificamente para
+            aquela pesquisa, sem derivar de uma fonte psicométrica validada e
+            citável. Isso significa que, na maioria dos casos, não há dados
+            formais de confiabilidade (como Alfa de Cronbach) ou validação
+            prévia disponíveis para esses instrumentos — eles foram construídos
+            sob medida para responder às necessidades do estudo específico em
+            que foram aplicados.
           </p>
         </div>
         <SearchBar action="/ad-hoc" state={query} />
