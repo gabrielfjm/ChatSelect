@@ -6,13 +6,7 @@ import type { Instrument } from "@/core/models/instrument";
  * leaving ragged whitespace — this stacks instead, so every field takes
  * only the height it needs. Autores, Idioma original, Traduções and
  * Foco da avaliação live in the dark side panel (InstrumentSidebar) instead. */
-function MetaItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function MetaItem({ label, value }: { label: string; value: React.ReactNode }) {
   if (value === null || value === undefined || value === "") return null;
   return (
     <div className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:gap-6">
