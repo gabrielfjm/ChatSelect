@@ -31,7 +31,12 @@ export function SearchBar({
     >
       {FACET_KEYS.flatMap((key) =>
         (state[key] ?? []).map((value) => (
-          <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
+          <input
+            key={`${key}:${value}`}
+            type="hidden"
+            name={key}
+            value={value}
+          />
         )),
       )}
       <Input

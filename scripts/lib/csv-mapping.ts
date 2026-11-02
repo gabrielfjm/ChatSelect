@@ -19,11 +19,11 @@ export interface CsvRow {
   "Link do instrumento": string;
   Instrumento: string;
   "Descrição do instrumento": string;
-  Categoria: string;
-  "Atributos de qualidade": string;
-  Atributos: string;
+  "Foco da avaliação": string;
+  "Perspectiva de qualidade": string;
+  "Atributo de qualidade": string;
   "Modalidades de comunicação": string;
-  "Amostra do estudo original": string;
+  "Amostra de validação do instrumento": string;
   "Número de itens": string;
   "Formato de resposta": string;
   "Como pontuar": string;
@@ -125,11 +125,11 @@ export function mapRow(row: CsvRow): Instrument {
     instrumentLink: nullIfEmpty(row["Link do instrumento"]),
     instrumentType: nullIfEmpty(row.Instrumento),
     instrumentDescription: nullIfEmpty(row["Descrição do instrumento"]),
-    category: nullIfEmpty(row.Categoria),
-    qualityAttributes: nullIfEmpty(row["Atributos de qualidade"]),
-    attributes: nullIfEmpty(row.Atributos),
+    category: nullIfEmpty(row["Foco da avaliação"]),
+    qualityAttributes: nullIfEmpty(row["Perspectiva de qualidade"]),
+    attributes: nullIfEmpty(row["Atributo de qualidade"]),
     communicationModalities: nullIfEmpty(row["Modalidades de comunicação"]),
-    originalSample: nullIfEmpty(row["Amostra do estudo original"]),
+    originalSample: nullIfEmpty(row["Amostra de validação do instrumento"]),
     itemCount: nullIfEmpty(row["Número de itens"]),
     responseFormat: nullIfEmpty(row["Formato de resposta"]),
     scoring: nullIfEmpty(row["Como pontuar"]),

@@ -11,13 +11,13 @@
 - **Total de instrumentos:** 41
 - **Validados** (fonte psicométrica citável): 27
 - **Ad Hoc / personalizados** (criados pelos autores do estudo): 14
-- **Categorias em uso:** Aceitação, Experiência do Usuário, Impacto Psicológico, Qualidade das Respostas, Usabilidade
+- **Focos da avaliação em uso:** Aceitação, Experiência do Usuário, Impacto Psicológico, Qualidade das Respostas, Usabilidade
 
 ## Instrumentos validados (27)
 
 Listados no Catálogo (`/instrumentos`).
 
-| Sheet | Título | Categoria | Idioma original | Rota |
+| Sheet | Título | Foco da avaliação | Idioma original | Rota |
 | --- | --- | --- | --- | --- |
 | BigTwo | Big Two Scale (Agency & Communion) | Experiência do Usuário | Alemão | `/instrumentos/bigtwo` |
 | CUQ | Chatbot Usability Questionnaire (CUQ) | Usabilidade | Inglês | `/instrumentos/cuq` |
@@ -51,7 +51,7 @@ Listados no Catálogo (`/instrumentos`).
 
 Listados na aba Instrumentos personalizados (`/ad-hoc`).
 
-| Sheet | Título | Categoria | Idioma original | Rota |
+| Sheet | Título | Foco da avaliação | Idioma original | Rota |
 | --- | --- | --- | --- | --- |
 | Attitude_Survey | Attitude Survey | Aceitação | Inglês | `/instrumentos/attitude-survey` |
 | Eval_Quest_Fuzzy_Chatbot | Chatbot Evaluation Questionnaire (Fuzzy Logic Tutoring System) | Experiência do Usuário | Não especificado | `/instrumentos/eval-quest-fuzzy-chatbot` |

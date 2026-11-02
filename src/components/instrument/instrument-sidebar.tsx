@@ -62,7 +62,7 @@ export function InstrumentSidebar({
         {instrument.category && (
           <div>
             <dt className="mb-1 text-xs font-medium tracking-wide text-slate-400 uppercase">
-              Categoria
+              Foco da avaliação
             </dt>
             <dd>
               <Badge
