@@ -52,8 +52,8 @@ const PROCESS_STEPS = [
   },
 ] as const;
 
-export default function HomePage() {
-  const all = getAllInstruments();
+export default async function HomePage() {
+  const all = await getAllInstruments();
   const adHocCount = filterByClassification(all, "ad-hoc").length;
   const validatedCount = all.length - adHocCount;
 

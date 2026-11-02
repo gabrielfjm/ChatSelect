@@ -47,10 +47,10 @@ function matchesQuery(instrument: Instrument, q: string): boolean {
   return haystack.includes(needle);
 }
 
-export function filterInstruments(
-  instruments: Instrument[],
+export function filterInstruments<T extends Instrument>(
+  instruments: T[],
   filters: CatalogFilters,
-): Instrument[] {
+): T[] {
   return instruments.filter((instrument) => {
     if (filters.q && !matchesQuery(instrument, filters.q)) return false;
     for (const key of FACET_KEYS) {
@@ -70,7 +70,7 @@ export function filterInstruments(
   });
 }
 
-export function sortByTitle(instruments: Instrument[]): Instrument[] {
+export function sortByTitle<T extends Instrument>(instruments: T[]): T[] {
   return [...instruments].sort((a, b) =>
     a.title.localeCompare(b.title, "pt-BR"),
   );
@@ -83,10 +83,10 @@ export function findInstrumentBySlug(
   return instruments.find((instrument) => instrument.slug === slug);
 }
 
-export function filterByClassification(
-  instruments: Instrument[],
+export function filterByClassification<T extends Instrument>(
+  instruments: T[],
   classification: Instrument["classification"],
-): Instrument[] {
+): T[] {
   return instruments.filter(
     (instrument) => instrument.classification === classification,
   );
@@ -121,6 +121,28 @@ export function getFacetOptions(
   const result = {} as Record<FacetKey, string[]>;
   for (const key of FACET_KEYS) {
     result[key] = getUniqueValues(instruments, FACET_FIELD_MAP[key]);
+  }
+  return result;
+}
+
+/** Fields whose form inputs suggest the values already in the catalog, so
+ * a new ficha reuses "Usabilidade" instead of creating a near-duplicate
+ * "usabilidade" filter option. */
+const SUGGESTED_FIELDS = [
+  "instrumentType",
+  "category",
+  "qualityAttributes",
+  "attributes",
+  "communicationModalities",
+  "originalLanguage",
+] as const satisfies readonly (keyof Instrument)[];
+
+export function getFieldSuggestions(
+  instruments: Instrument[],
+): Record<(typeof SUGGESTED_FIELDS)[number], string[]> {
+  const result = {} as Record<(typeof SUGGESTED_FIELDS)[number], string[]>;
+  for (const field of SUGGESTED_FIELDS) {
+    result[field] = getUniqueValues(instruments, field);
   }
   return result;
 }

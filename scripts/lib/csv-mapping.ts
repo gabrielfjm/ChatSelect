@@ -1,6 +1,6 @@
 /**
  * Pure CSV-row -> Instrument mapping logic, kept separate from
- * build-catalog.ts (which does file I/O) so it can be unit tested without
+ * seed-database.ts (which does file/network I/O) so it can be unit tested without
  * triggering the ingestion script's side effects on import.
  */
 import type { Instrument } from "../../src/core/models/instrument";
@@ -8,6 +8,12 @@ import {
   KNOWN_ADAPTED_SHEET_NAMES,
   KNOWN_AD_HOC_SHEET_NAMES,
 } from "../../src/core/models/known-classification";
+import {
+  detectDualApplication,
+  slugify,
+} from "../../src/core/models/instrument-text";
+
+export { slugify };
 
 export interface CsvRow {
   Nome_Aba: string;
@@ -52,16 +58,6 @@ export function splitBullets(value: string | undefined): string[] {
         .trim(),
     )
     .filter(Boolean);
-}
-
-export function slugify(sheetName: string): string {
-  return sheetName
-    .toLowerCase()
-    .replace(/\+/g, "-plus")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // strip accents
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 const KNOWN_ADAPTED = new Set<string>(KNOWN_ADAPTED_SHEET_NAMES);
@@ -109,8 +105,7 @@ export function classify(row: CsvRow): {
 }
 
 export function isDualApplication(row: CsvRow): boolean {
-  const text = row["Descrição do instrumento"] ?? "";
-  return /aplicaç[ãa]o 1/i.test(text) && /aplicaç[ãa]o 2/i.test(text);
+  return detectDualApplication(row["Descrição do instrumento"]);
 }
 
 export function mapRow(row: CsvRow): Instrument {

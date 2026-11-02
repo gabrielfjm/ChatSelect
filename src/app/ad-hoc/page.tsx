@@ -28,7 +28,7 @@ export default async function AdHocPage({
 }) {
   const query = catalogQueryFromSearchParams(await searchParams);
 
-  const adHoc = filterByClassification(getAllInstruments(), "ad-hoc");
+  const adHoc = filterByClassification(await getAllInstruments(), "ad-hoc");
   const facetOptions = getFacetOptions(adHoc);
   const filtered = sortByTitle(filterInstruments(adHoc, query));
 
