@@ -15,9 +15,15 @@ import type { CatalogUrlState } from "@/lib/catalog/catalog-url";
 export function SearchBar({
   action,
   state,
+  hiddenFields = {},
+  placeholder = "Buscar por título, autor ou descrição...",
 }: {
   action: string;
   state: CatalogUrlState;
+  /** Extra params to keep across searches (a GET form drops the action's
+   * own query string), e.g. the admin panel's status tab. */
+  hiddenFields?: Record<string, string>;
+  placeholder?: string;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -29,16 +35,24 @@ export function SearchBar({
       className="flex gap-2"
       role="search"
     >
+      {Object.entries(hiddenFields).map(([name, value]) => (
+        <input key={name} type="hidden" name={name} value={value} />
+      ))}
       {FACET_KEYS.flatMap((key) =>
         (state[key] ?? []).map((value) => (
-          <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
+          <input
+            key={`${key}:${value}`}
+            type="hidden"
+            name={key}
+            value={value}
+          />
         )),
       )}
       <Input
         type="search"
         name="q"
         defaultValue={state.q ?? ""}
-        placeholder="Buscar por título, autor ou descrição..."
+        placeholder={placeholder}
         aria-label="Buscar instrumentos"
         onChange={(e) => {
           if (e.target.value === "" && (state.q ?? "") !== "") {

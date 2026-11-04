@@ -17,15 +17,11 @@ interface InstrumentPageProps {
   searchParams: Promise<{ from?: string }>;
 }
 
-export function generateStaticParams() {
-  return getAllInstruments().map((instrument) => ({ slug: instrument.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: InstrumentPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const instrument = findInstrumentBySlug(getAllInstruments(), slug);
+  const instrument = findInstrumentBySlug(await getAllInstruments(), slug);
   if (!instrument) return {};
   return {
     title: instrument.title,
@@ -39,7 +35,7 @@ export default async function InstrumentPage({
 }: InstrumentPageProps) {
   const { slug } = await params;
   const { from } = await searchParams;
-  const instrument = findInstrumentBySlug(getAllInstruments(), slug);
+  const instrument = findInstrumentBySlug(await getAllInstruments(), slug);
   if (!instrument) notFound();
 
   // Ad-hoc instruments are only ever linked from /ad-hoc (the /instrumentos

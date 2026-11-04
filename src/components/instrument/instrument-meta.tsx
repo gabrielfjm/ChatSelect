@@ -5,14 +5,8 @@ import type { Instrument } from "@/core/models/instrument";
  * Original: Alemão") next to a six-line one (e.g. "Formato de resposta"),
  * leaving ragged whitespace — this stacks instead, so every field takes
  * only the height it needs. Autores, Idioma original, Traduções and
- * Categoria live in the dark side panel (InstrumentSidebar) instead. */
-function MetaItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+ * Foco da avaliação live in the dark side panel (InstrumentSidebar) instead. */
+function MetaItem({ label, value }: { label: string; value: React.ReactNode }) {
   if (value === null || value === undefined || value === "") return null;
   return (
     <div className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:gap-6">
@@ -30,7 +24,7 @@ export function InstrumentMeta({ instrument }: { instrument: Instrument }) {
       <h2 className="mb-2 text-xl font-semibold">Detalhes técnicos</h2>
       <dl className="divide-y">
         <MetaItem
-          label="Amostra do estudo original"
+          label="Amostra de validação do instrumento"
           value={instrument.originalSample}
         />
         <MetaItem
@@ -47,10 +41,10 @@ export function InstrumentMeta({ instrument }: { instrument: Instrument }) {
           value={instrument.communicationModalities}
         />
         <MetaItem
-          label="Atributos de qualidade"
+          label="Perspectiva de qualidade"
           value={instrument.qualityAttributes}
         />
-        <MetaItem label="Atributos" value={instrument.attributes} />
+        <MetaItem label="Atributo de qualidade" value={instrument.attributes} />
         {instrument.instrumentLink && (
           <MetaItem
             label="Link do instrumento"

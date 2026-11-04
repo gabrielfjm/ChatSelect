@@ -11,11 +11,11 @@ import {
 import { categorySolidClasses } from "@/lib/catalog/category-colors";
 
 const FACET_LABELS: Record<FacetKey, string> = {
-  category: "Categoria",
+  category: "Foco da avaliação",
   originalLanguage: "Idioma",
   communicationModality: "Modalidade de comunicação",
-  attribute: "Atributos",
-  qualityAttribute: "Atributos de qualidade",
+  attribute: "Atributo de qualidade",
+  qualityAttribute: "Perspectiva de qualidade",
 };
 
 function ToggleOption({
@@ -44,7 +44,8 @@ function ToggleOption({
         className={cn(
           "border-input flex size-4 shrink-0 items-center justify-center rounded-sm border-2 transition-colors",
           active
-            ? (solidClasses ?? "border-primary bg-primary text-primary-foreground")
+            ? (solidClasses ??
+                "border-primary bg-primary text-primary-foreground")
             : "hover:border-primary",
         )}
       >
@@ -95,7 +96,9 @@ export function FilterSidebar({
                     active={active}
                     label={option}
                     solidClasses={
-                      key === "category" ? categorySolidClasses(option) : undefined
+                      key === "category"
+                        ? categorySolidClasses(option)
+                        : undefined
                     }
                   />
                 );

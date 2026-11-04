@@ -30,7 +30,7 @@ export default async function CatalogPage({
 
   // Only Adaptado/Original instruments are shown here (and match the search
   // bar). Ad-hoc instruments are exclusive to the dedicated /ad-hoc page.
-  const adapted = filterByClassification(getAllInstruments(), "adapted");
+  const adapted = filterByClassification(await getAllInstruments(), "adapted");
   const facetOptions = getFacetOptions(adapted);
   const filtered = sortByTitle(filterInstruments(adapted, query));
 
@@ -46,15 +46,14 @@ export default async function CatalogPage({
               Instrumentos de avaliação
             </h1>
             <p className="text-muted-foreground text-sm">
-              Os instrumentos validados são questionários, escalas,
-              entrevistas ou rubricas com origem em fontes psicométricas
-              citáveis, desenvolvidos e testados em estudos anteriores antes
-              de serem aplicados em pesquisas com chatbots educacionais.
-              Isso significa que, na maioria dos casos, há dados formais de
-              confiabilidade (como Alfa de Cronbach) e evidências de
-              validação disponíveis para esses instrumentos — eles passaram
-              por um processo de verificação psicométrica antes de chegarem
-              ao contexto em que foram usados.
+              Os instrumentos validados são questionários, escalas, entrevistas
+              ou rubricas com origem em fontes psicométricas citáveis,
+              desenvolvidos e testados em estudos anteriores antes de serem
+              aplicados em pesquisas com chatbots educacionais. Isso significa
+              que, na maioria dos casos, há dados formais de confiabilidade
+              (como Alfa de Cronbach) e evidências de validação disponíveis para
+              esses instrumentos — eles passaram por um processo de verificação
+              psicométrica antes de chegarem ao contexto em que foram usados.
             </p>
           </div>
           <SearchBar action="/instrumentos" state={query} />
