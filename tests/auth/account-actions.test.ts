@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   createUserAccount: vi.fn(),
+  deleteAccount: vi.fn(),
+  demoteToUser: vi.fn(),
   getUserAccount: vi.fn(),
   promoteToAdmin: vi.fn(),
   requireAdmin: vi.fn(),
@@ -22,11 +24,17 @@ vi.mock("@/lib/supabase/auth-client", () => ({
 vi.mock("@/lib/auth/admin-users-repository", () => ({
   AdminAccountError: class AdminAccountError extends Error {},
   createUserAccount: mocks.createUserAccount,
+  deleteAccount: mocks.deleteAccount,
+  demoteToUser: mocks.demoteToUser,
   getUserAccount: mocks.getUserAccount,
   promoteToAdmin: mocks.promoteToAdmin,
 }));
 
-import { promoteUser } from "@/app/admin/admin-users-actions";
+import {
+  demoteAdmin,
+  promoteUser,
+  removeUserAccount,
+} from "@/app/admin/admin-users-actions";
 import { signUp } from "@/app/cadastro/actions";
 import { AdminAccountError } from "@/lib/auth/admin-users-repository";
 
@@ -140,5 +148,80 @@ describe("promoteUser", () => {
     mocks.getUserAccount.mockResolvedValueOnce({ id: "u1", isAdmin: true });
     expect((await promoteUser("u1")).error).toBeDefined();
     expect(mocks.promoteToAdmin).not.toHaveBeenCalled();
+  });
+});
+
+describe("demoteAdmin", () => {
+  beforeEach(() => {
+    mocks.requireAdmin.mockResolvedValue({ id: "me" });
+  });
+
+  it("demotes another admin", async () => {
+    mocks.getUserAccount.mockResolvedValue({
+      id: "a1",
+      isAdmin: true,
+      fixed: false,
+    });
+    await expect(demoteAdmin("a1")).rejects.toThrow(
+      "REDIRECT:/admin/contas?rebaixado=1",
+    );
+    expect(mocks.demoteToUser).toHaveBeenCalledWith("a1");
+  });
+
+  it("does nothing for callers who aren't admins", async () => {
+    mocks.requireAdmin.mockImplementationOnce(() => {
+      throw new Error("REDIRECT:/conta");
+    });
+    await expect(demoteAdmin("a1")).rejects.toThrow("REDIRECT:/conta");
+    expect(mocks.demoteToUser).not.toHaveBeenCalled();
+  });
+
+  it("refuses the caller's own account", async () => {
+    expect((await demoteAdmin("me")).error).toBeDefined();
+    expect(mocks.demoteToUser).not.toHaveBeenCalled();
+  });
+
+  it("refuses fixed admins, ordinary users and unknown accounts", async () => {
+    for (const target of [
+      { id: "a1", isAdmin: true, fixed: true },
+      { id: "a1", isAdmin: false, fixed: false },
+      null,
+    ]) {
+      mocks.getUserAccount.mockResolvedValueOnce(target);
+      expect((await demoteAdmin("a1")).error).toBeDefined();
+    }
+    expect(mocks.demoteToUser).not.toHaveBeenCalled();
+  });
+
+  it("returns an error when the lookup throws", async () => {
+    vi.spyOn(console, "error").mockImplementationOnce(() => {});
+    mocks.getUserAccount.mockRejectedValueOnce(new Error("invalid uuid"));
+    expect((await demoteAdmin("nao-e-uuid")).error).toBeDefined();
+  });
+});
+
+describe("removeUserAccount", () => {
+  it("deletes an ordinary account", async () => {
+    mocks.getUserAccount.mockResolvedValue({ id: "u1", isAdmin: false });
+    await expect(removeUserAccount("u1")).rejects.toThrow(
+      "REDIRECT:/admin/contas?excluida=1",
+    );
+    expect(mocks.deleteAccount).toHaveBeenCalledWith("u1");
+  });
+
+  it("does nothing for callers who aren't admins", async () => {
+    mocks.requireAdmin.mockImplementationOnce(() => {
+      throw new Error("REDIRECT:/conta");
+    });
+    await expect(removeUserAccount("u1")).rejects.toThrow("REDIRECT:/conta");
+    expect(mocks.deleteAccount).not.toHaveBeenCalled();
+  });
+
+  it("refuses admins and unknown accounts", async () => {
+    mocks.getUserAccount.mockResolvedValueOnce({ id: "a1", isAdmin: true });
+    expect((await removeUserAccount("a1")).error).toBeDefined();
+    mocks.getUserAccount.mockResolvedValueOnce(null);
+    expect((await removeUserAccount("nope")).error).toBeDefined();
+    expect(mocks.deleteAccount).not.toHaveBeenCalled();
   });
 });

@@ -44,7 +44,11 @@ O CSV `data/Fichas_Instrumentos_Avaliacao.csv` continua no repositório, mas ago
 
 Qualquer pessoa cria uma conta em **`/cadastro`** e entra em **`/entrar`**. Uma conta nova é de **usuário**: vê os próprios dados em `/conta` e não acessa o painel.
 
-Em **`/admin/contas`** os admins veem todas as contas criadas e usam **Tornar administrador** para promover um usuário. O acesso vale a partir da próxima requisição da pessoa.
+Em **`/admin/contas`** os admins veem todas as contas criadas e podem:
+
+- **Tornar administrador** um usuário. O acesso vale a partir da próxima requisição da pessoa.
+- **Rebaixar para usuário** outro administrador. A conta continua existindo. Ninguém rebaixa a si mesmo, e admins fixos (`ADMIN_EMAILS`) só mudam na configuração do servidor.
+- **Excluir** a conta de um usuário, definitivamente, o que libera o e-mail para um novo cadastro. Para excluir um administrador, rebaixe-o antes ou use `/admin/administradores`.
 
 - O cadastro não envia e-mail nem verifica a posse do endereço, por isso o painel pede que o admin confirme com a pessoa antes de promover.
 - O formulário de cadastro roda no servidor com a chave secreta, **recusa os e-mails de `ADMIN_EMAILS`** e marca a conta com `app_metadata.self_signup`. Contas com essa marca nunca contam como admin fixo, mesmo que o e-mail entre em `ADMIN_EMAILS` depois: só viram admin sendo promovidas.
@@ -115,7 +119,7 @@ Já testamos e descartamos duas alternativas nesta mesma base antes de chegar aq
 | `npm run db:seed`       | Importa o CSV para o banco (ver acima)        |
 | `npm run typecheck`     | Checagem de tipos                             |
 | `npm run lint`          | ESLint                                        |
-| `npm run test`          | Testes (Vitest) — 68 testes, cobrindo o mapeamento CSV→Instrument, os filtros do catálogo, a validação dos formulários de ficha e de administrador, a regra de quem é admin, o cadastro de contas, a promoção a admin e o mapeamento das linhas do banco |
+| `npm run test`          | Testes (Vitest) — 76 testes, cobrindo o mapeamento CSV→Instrument, os filtros do catálogo, a validação dos formulários de ficha e de administrador, a regra de quem é admin, o cadastro de contas, a promoção e o rebaixamento de admins, a exclusão de contas e o mapeamento das linhas do banco |
 | `npm run format`        | Prettier (escrita)                            |
 
 ## Deploy na Vercel
