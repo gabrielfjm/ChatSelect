@@ -169,7 +169,15 @@ export async function updateAdminAccount(
   if (error) translate(error);
 }
 
-export async function deleteAdminAccount(id: string): Promise<void> {
+export async function demoteToUser(id: string): Promise<void> {
+  const { error } = await createServiceClient().auth.admin.updateUserById(id, {
+    // Supabase merges app_metadata; null removes the key.
+    app_metadata: { role: null },
+  });
+  if (error) translate(error);
+}
+
+export async function deleteAccount(id: string): Promise<void> {
   const { error } = await createServiceClient().auth.admin.deleteUser(id);
   if (error) translate(error);
 }

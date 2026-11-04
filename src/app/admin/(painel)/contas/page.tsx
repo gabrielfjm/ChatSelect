@@ -3,6 +3,8 @@ import { ChevronRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { DeleteAccountButton } from "@/components/admin/delete-account-button";
+import { DemoteAdminButton } from "@/components/admin/demote-admin-button";
 import { PromoteUserButton } from "@/components/admin/promote-user-button";
 import { requireAdmin } from "@/lib/auth/admin";
 import { listUserAccounts } from "@/lib/auth/admin-users-repository";
@@ -16,11 +18,19 @@ const dateFormat = new Intl.DateTimeFormat("pt-BR", {
 export default async function AccountsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ promovido?: string }>;
+  searchParams: Promise<{
+    promovido?: string;
+    rebaixado?: string;
+    excluida?: string;
+  }>;
 }) {
   const me = await requireAdmin();
-  const { promovido } = await searchParams;
+  const { promovido, rebaixado, excluida } = await searchParams;
   const accounts = await listUserAccounts();
+  const notice =
+    (promovido === "1" && "Usuário promovido a administrador.") ||
+    (rebaixado === "1" && "Administrador rebaixado para usuário.") ||
+    (excluida === "1" && "Conta excluída.");
 
   return (
     <Container className="max-w-4xl space-y-6 py-8">
@@ -32,12 +42,12 @@ export default async function AccountsPage({
         </p>
       </div>
 
-      {promovido === "1" && (
+      {notice && (
         <p
           role="status"
           className="rounded-md bg-emerald-100 px-4 py-2 text-sm text-emerald-900"
         >
-          Usuário promovido a administrador.
+          {notice}
         </p>
       )}
 
@@ -66,6 +76,14 @@ export default async function AccountsPage({
                     Usuário
                   </span>
                 )}
+                {account.fixed && (
+                  <span
+                    className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700"
+                    title="Definido em ADMIN_EMAILS na configuração do servidor"
+                  >
+                    Fixo
+                  </span>
+                )}
               </p>
               <p className="text-muted-foreground truncate text-xs">
                 {account.name ? `${account.email} · ` : ""}
@@ -76,20 +94,36 @@ export default async function AccountsPage({
                   : "ainda não entrou"}
               </p>
             </div>
-            {account.isAdmin ? (
-              <Button asChild variant="ghost" size="sm">
-                <Link href={`/admin/administradores/${account.id}`}>
-                  Ver administrador
-                  <ChevronRight aria-hidden="true" />
-                </Link>
-              </Button>
-            ) : (
-              <PromoteUserButton
-                id={account.id}
-                name={account.name}
-                email={account.email}
-              />
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {account.isAdmin ? (
+                <>
+                  {account.id !== me.id && !account.fixed && (
+                    <DemoteAdminButton
+                      id={account.id}
+                      label={account.name ?? account.email}
+                    />
+                  )}
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href={`/admin/administradores/${account.id}`}>
+                      Ver administrador
+                      <ChevronRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <PromoteUserButton
+                    id={account.id}
+                    name={account.name}
+                    email={account.email}
+                  />
+                  <DeleteAccountButton
+                    id={account.id}
+                    label={account.name ?? account.email}
+                  />
+                </>
+              )}
+            </div>
           </div>
         ))}
       </Card>

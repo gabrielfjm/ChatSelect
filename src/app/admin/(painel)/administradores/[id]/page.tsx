@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/container";
 import { Card } from "@/components/ui/card";
 import { AdminUserForm } from "@/components/admin/admin-user-form";
 import { DeleteAdminButton } from "@/components/admin/delete-admin-button";
+import { DemoteAdminButton } from "@/components/admin/demote-admin-button";
 import { requireAdmin } from "@/lib/auth/admin";
 import { getAdminAccount } from "@/lib/auth/admin-users-repository";
 
@@ -86,10 +87,16 @@ export default async function EditAdminUserPage({
               ser removido na configuração do servidor.
             </p>
           ) : (
-            <DeleteAdminButton
-              id={account.id}
-              label={account.name ?? account.email}
-            />
+            <div className="flex flex-wrap gap-2">
+              <DemoteAdminButton
+                id={account.id}
+                label={account.name ?? account.email}
+              />
+              <DeleteAdminButton
+                id={account.id}
+                label={account.name ?? account.email}
+              />
+            </div>
           )}
         </Card>
       )}

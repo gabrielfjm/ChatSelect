@@ -10,7 +10,8 @@ import {
 import {
   AdminAccountError,
   createAdminAccount,
-  deleteAdminAccount,
+  deleteAccount,
+  demoteToUser,
   getAdminAccount,
   getUserAccount,
   listAdminAccounts,
@@ -99,11 +100,11 @@ export interface DeleteAdminState {
   error?: string;
 }
 
-export interface PromoteUserState {
+export interface AccountActionState {
   error?: string;
 }
 
-export async function promoteUser(id: string): Promise<PromoteUserState> {
+export async function promoteUser(id: string): Promise<AccountActionState> {
   await requireAdmin();
 
   try {
@@ -117,6 +118,55 @@ export async function promoteUser(id: string): Promise<PromoteUserState> {
 
   refreshAdminPages();
   redirect("/admin/contas?promovido=1");
+}
+
+/** Takes away panel access but keeps the account. The caller stays an admin
+ * (nobody demotes themselves), so this can't leave the panel without admins. */
+export async function demoteAdmin(id: string): Promise<AccountActionState> {
+  const me = await requireAdmin();
+  if (id === me.id) {
+    return { error: "Você não pode rebaixar a própria conta." };
+  }
+
+  try {
+    const target = await getUserAccount(id);
+    if (!target) return { error: "Conta não encontrada." };
+    if (!target.isAdmin) return { error: "Esta conta já é de usuário." };
+    if (target.fixed) {
+      return {
+        error:
+          "Este administrador é fixo (ADMIN_EMAILS) e só pode ser rebaixado na configuração do servidor.",
+      };
+    }
+    await demoteToUser(id);
+  } catch (error) {
+    return { error: errorMessage(error, "Não foi possível rebaixar a conta.") };
+  }
+
+  refreshAdminPages();
+  redirect("/admin/contas?rebaixado=1");
+}
+
+/** Deletes ordinary accounts only. Admins go through removeAdminUser (or are
+ * demoted first), which has its own guard rails. */
+export async function removeUserAccount(
+  id: string,
+): Promise<AccountActionState> {
+  await requireAdmin();
+
+  try {
+    const target = await getUserAccount(id);
+    if (!target) return { error: "Conta não encontrada." };
+    if (target.isAdmin) {
+      return { error: "Rebaixe o administrador antes de excluir a conta." };
+    }
+    await deleteAccount(id);
+  } catch (error) {
+    return { error: errorMessage(error, "Não foi possível excluir a conta.") };
+  }
+
+  refreshAdminPages();
+  redirect("/admin/contas?excluida=1");
 }
 
 export async function removeAdminUser(id: string): Promise<DeleteAdminState> {
@@ -138,7 +188,7 @@ export async function removeAdminUser(id: string): Promise<DeleteAdminState> {
   }
 
   try {
-    await deleteAdminAccount(id);
+    await deleteAccount(id);
   } catch (error) {
     return { error: errorMessage(error, "Não foi possível excluir.") };
   }
