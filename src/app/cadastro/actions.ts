@@ -13,6 +13,8 @@ import {
 import { createAuthClient } from "@/lib/supabase/auth-client";
 import { getAdminEmails } from "@/lib/supabase/env";
 
+const EMAIL_TAKEN_MESSAGE = "Já existe um usuário com esse e-mail.";
+
 export interface SignUpFormState {
   status: "idle" | "error";
   fieldErrors?: AdminUserFieldErrors;
@@ -42,14 +44,10 @@ export async function signUp(
   const { name, email } = parsed.data;
   const password = parsed.data.password!;
 
-  // E-mails in ADMIN_EMAILS are admins by address alone, and sign-up doesn't
-  // prove ownership of the address: registering one here would grant admin.
+  // Reserved for the fixed admins, whose accounts are created in Supabase. Same
+  // message as an e-mail already taken, so this doesn't reveal who they are.
   if (isFixedAdmin(email, getAdminEmails())) {
-    return {
-      status: "error",
-      fieldErrors: { email: "Este e-mail não pode ser usado no cadastro." },
-      message: "Revise os campos destacados.",
-    };
+    return { status: "error", message: EMAIL_TAKEN_MESSAGE };
   }
 
   try {

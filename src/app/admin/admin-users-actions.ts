@@ -106,11 +106,10 @@ export interface PromoteUserState {
 export async function promoteUser(id: string): Promise<PromoteUserState> {
   await requireAdmin();
 
-  const target = await getUserAccount(id);
-  if (!target) return { error: "Conta não encontrada." };
-  if (target.isAdmin) return { error: "Esta conta já é de administrador." };
-
   try {
+    const target = await getUserAccount(id);
+    if (!target) return { error: "Conta não encontrada." };
+    if (target.isAdmin) return { error: "Esta conta já é de administrador." };
     await promoteToAdmin(id);
   } catch (error) {
     return { error: errorMessage(error, "Não foi possível promover a conta.") };

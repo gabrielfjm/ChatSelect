@@ -2,7 +2,12 @@ import "server-only";
 import type { User } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { getAdminEmails } from "@/lib/supabase/env";
-import { ADMIN_ROLE, isAdminAuthUser, isFixedAdmin } from "./admin-role";
+import {
+  ADMIN_ROLE,
+  SELF_SIGNUP_FLAG,
+  isAdminAuthUser,
+  isFixedAdminUser,
+} from "./admin-role";
 import type { AdminUserInput } from "./admin-user-form";
 
 /**
@@ -35,7 +40,7 @@ function toAccount(user: User, fixedEmails: ReadonlySet<string>): AdminAccount {
     id: user.id,
     email: (user.email ?? "").toLowerCase(),
     name: typeof name === "string" && name ? name : null,
-    fixed: isFixedAdmin(user.email, fixedEmails),
+    fixed: isFixedAdminUser(user, fixedEmails),
     createdAt: user.created_at,
     lastSignInAt: user.last_sign_in_at ?? null,
   };
@@ -119,6 +124,7 @@ export async function createUserAccount(input: {
     email: input.email,
     password: input.password,
     email_confirm: true,
+    app_metadata: { [SELF_SIGNUP_FLAG]: true },
     user_metadata: { name: input.name },
   });
   if (error) translate(error);

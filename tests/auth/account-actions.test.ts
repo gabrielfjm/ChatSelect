@@ -66,8 +66,11 @@ describe("signUp", () => {
       { status: "idle" },
       form({ ...valid, email: "  DONO@Exemplo.com " }),
     );
-    expect(result.status).toBe("error");
-    expect(result.fieldErrors?.email).toBeDefined();
+    // Indistinguishable from an e-mail already taken.
+    expect(result).toEqual({
+      status: "error",
+      message: "Já existe um usuário com esse e-mail.",
+    });
     expect(mocks.createUserAccount).not.toHaveBeenCalled();
   });
 
@@ -121,6 +124,13 @@ describe("promoteUser", () => {
     });
     await expect(promoteUser("u1")).rejects.toThrow("REDIRECT:/conta");
     expect(mocks.getUserAccount).not.toHaveBeenCalled();
+    expect(mocks.promoteToAdmin).not.toHaveBeenCalled();
+  });
+
+  it("returns an error when the lookup throws (e.g. an invalid id)", async () => {
+    vi.spyOn(console, "error").mockImplementationOnce(() => {});
+    mocks.getUserAccount.mockRejectedValueOnce(new Error("invalid uuid"));
+    expect((await promoteUser("nao-e-uuid")).error).toBeDefined();
     expect(mocks.promoteToAdmin).not.toHaveBeenCalled();
   });
 
