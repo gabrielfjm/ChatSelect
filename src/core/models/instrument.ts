@@ -2,8 +2,8 @@ import { z } from "zod";
 
 /**
  * Domain shape for one instrument card ("ficha"). Field names are English
- * translations of the CSV column labels (kept 1:1 with the source so the
- * ingestion script in scripts/build-catalog.ts stays a thin mapping).
+ * translations of the original CSV column labels (the CSV is still the seed
+ * for the database — see scripts/seed-database.ts).
  */
 export const instrumentSchema = z.object({
   slug: z.string(),
@@ -35,9 +35,21 @@ export const instrumentSchema = z.object({
 
 export type Instrument = z.infer<typeof instrumentSchema>;
 
-export const instrumentCatalogSchema = z.object({
-  generatedAt: z.string(),
-  instruments: z.array(instrumentSchema),
-});
+export const INSTRUMENT_STATUSES = ["pending", "approved", "rejected"] as const;
+export type InstrumentStatus = (typeof INSTRUMENT_STATUSES)[number];
 
-export type InstrumentCatalog = z.infer<typeof instrumentCatalogSchema>;
+/** An instrument as stored in the database, including the moderation
+ * workflow fields. Only `approved` records are ever shown on the public
+ * site; `pending` ones come from the public /solicitar form. */
+export interface InstrumentRecord extends Instrument {
+  id: string;
+  status: InstrumentStatus;
+  submitterName: string | null;
+  submitterEmail: string | null;
+  submitterNotes: string | null;
+  reviewNotes: string | null;
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -30,7 +30,7 @@ export default async function CatalogPage({
 
   // Only Adaptado/Original instruments are shown here (and match the search
   // bar). Ad-hoc instruments are exclusive to the dedicated /ad-hoc page.
-  const adapted = filterByClassification(getAllInstruments(), "adapted");
+  const adapted = filterByClassification(await getAllInstruments(), "adapted");
   const facetOptions = getFacetOptions(adapted);
   const filtered = sortByTitle(filterInstruments(adapted, query));
 
