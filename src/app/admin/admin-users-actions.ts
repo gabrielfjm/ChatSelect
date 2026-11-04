@@ -12,7 +12,9 @@ import {
   createAdminAccount,
   deleteAdminAccount,
   getAdminAccount,
+  getUserAccount,
   listAdminAccounts,
+  promoteToAdmin,
   updateAdminAccount,
 } from "@/lib/auth/admin-users-repository";
 
@@ -95,6 +97,27 @@ export async function saveAdminUser(
 
 export interface DeleteAdminState {
   error?: string;
+}
+
+export interface PromoteUserState {
+  error?: string;
+}
+
+export async function promoteUser(id: string): Promise<PromoteUserState> {
+  await requireAdmin();
+
+  const target = await getUserAccount(id);
+  if (!target) return { error: "Conta não encontrada." };
+  if (target.isAdmin) return { error: "Esta conta já é de administrador." };
+
+  try {
+    await promoteToAdmin(id);
+  } catch (error) {
+    return { error: errorMessage(error, "Não foi possível promover a conta.") };
+  }
+
+  refreshAdminPages();
+  redirect("/admin/contas?promovido=1");
 }
 
 export async function removeAdminUser(id: string): Promise<DeleteAdminState> {

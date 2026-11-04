@@ -40,6 +40,16 @@ O CSV `data/Fichas_Instrumentos_Avaliacao.csv` continua no repositório, mas ago
 2. O admin entra em **`/admin`** (link "Área do administrador" no rodapé), vê as solicitações pendentes, completa/corrige os campos e clica em **Aprovar e publicar** → a ficha passa a aparecer no catálogo (ou em Ad Hoc, conforme a classificação).
 3. Também no painel: **Rejeitar** (fica guardada, fora do site), **Despublicar** (volta para pendente), **Excluir** (definitivo) e **Novo instrumento** (o admin cadastra direto, publicado ou como rascunho).
 
+## Contas
+
+Qualquer pessoa cria uma conta em **`/cadastro`** e entra em **`/entrar`**. Uma conta nova é de **usuário**: vê os próprios dados em `/conta` e não acessa o painel.
+
+Em **`/admin/contas`** os admins veem todas as contas criadas e usam **Tornar administrador** para promover um usuário. O acesso vale a partir da próxima requisição da pessoa.
+
+- O cadastro não envia e-mail nem verifica a posse do endereço, por isso o painel pede que o admin confirme com a pessoa antes de promover.
+- O formulário de cadastro roda no servidor com a chave secreta e **recusa os e-mails de `ADMIN_EMAILS`**, que dão acesso de admin só pelo endereço. Por isso "Allow new users to sign up" precisa continuar **desativado** no Supabase: ligado, a chave pública permitiria criar contas direto na API, sem passar por essa verificação.
+- Não há limite de tentativas no cadastro, só o campo honeypot contra spam simples.
+
 ## Administradores
 
 Em **`/admin/administradores`** qualquer admin cadastra, edita (nome, e-mail, senha) e remove outros admins. Em **"Minha conta"** cada um troca a própria senha.
@@ -77,7 +87,7 @@ npm run dev   # http://localhost:3000 (ou a próxima porta livre)
 1. Crie um projeto em [supabase.com](https://supabase.com) (o plano gratuito basta).
 2. No **SQL Editor**, rode o conteúdo de `supabase/schema.sql`.
 3. Copie `.env.example` para `.env.local` e preencha com os valores de **Project Settings → API** e os e-mails dos admins.
-4. Em **Authentication → Users → Add user**, crie o usuário (e-mail + senha, marcando "Auto Confirm User") do admin listado em `ADMIN_EMAILS`. Os demais admins podem ser cadastrados depois pelo próprio painel. Desative "Allow new users to sign up" em **Authentication → Sign In / Providers** — o login do painel não precisa de cadastro aberto.
+4. Em **Authentication → Users → Add user**, crie o usuário (e-mail + senha, marcando "Auto Confirm User") do admin listado em `ADMIN_EMAILS`. Os demais admins podem ser cadastrados depois pelo próprio painel. Desative "Allow new users to sign up" em **Authentication → Sign In / Providers** — o `/cadastro` do site continua funcionando, porque cria as contas pelo servidor (veja [Contas](#contas)).
 5. Rode `npm run db:seed` para importar as 41 fichas do CSV como publicadas.
 6. Na Vercel, cadastre as mesmas 4 variáveis em **Settings → Environment Variables** e faça o deploy.
 
@@ -104,7 +114,7 @@ Já testamos e descartamos duas alternativas nesta mesma base antes de chegar aq
 | `npm run db:seed`       | Importa o CSV para o banco (ver acima)        |
 | `npm run typecheck`     | Checagem de tipos                             |
 | `npm run lint`          | ESLint                                        |
-| `npm run test`          | Testes (Vitest) — 54 testes, cobrindo o mapeamento CSV→Instrument, os filtros do catálogo, a validação dos formulários de ficha e de administrador, a regra de quem é admin e o mapeamento das linhas do banco |
+| `npm run test`          | Testes (Vitest) — 65 testes, cobrindo o mapeamento CSV→Instrument, os filtros do catálogo, a validação dos formulários de ficha e de administrador, a regra de quem é admin, o cadastro de contas, a promoção a admin e o mapeamento das linhas do banco |
 | `npm run format`        | Prettier (escrita)                            |
 
 ## Deploy na Vercel

@@ -63,12 +63,7 @@ export async function login(
   });
   if (error) return { error: "E-mail ou senha incorretos." };
 
-  if (!isAdminAuthUser(data.user, getAdminEmails())) {
-    await supabase.auth.signOut();
-    return { error: "Este usuário não tem permissão de administrador." };
-  }
-
-  redirect("/admin");
+  redirect(isAdminAuthUser(data.user, getAdminEmails()) ? "/admin" : "/conta");
 }
 
 export async function logout() {
