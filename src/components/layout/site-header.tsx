@@ -213,14 +213,15 @@ export function SiteHeader({
             <span className="block text-lg font-semibold tracking-tight text-white">
               Evalua
             </span>
-            <span className="hidden text-xs text-blue-200 sm:block">
+            {/* Hidden from lg to xl, where the full nav needs the room. */}
+            <span className="hidden text-xs text-blue-200 sm:block lg:hidden xl:block">
               Catálogo de instrumentos de avaliação de chatbots educacionais
             </span>
           </span>
         </Link>
 
-        <div className="flex items-center gap-5">
-          <nav className="hidden gap-6 text-sm font-medium lg:flex">
+        <div className="flex shrink-0 items-center gap-5">
+          <nav className="hidden gap-6 text-sm font-medium whitespace-nowrap lg:flex">
             {NAV_ITEMS.map((item) => {
               const active = item.href === activeHref;
               return (
