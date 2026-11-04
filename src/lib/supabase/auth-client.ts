@@ -4,8 +4,8 @@ import { createServerClient } from "@supabase/ssr";
 import { getSupabaseAnonKey, getSupabaseUrl } from "./env";
 
 /**
- * Supabase client bound to the request cookies — used only for the admin
- * login session (Supabase Auth), never for reading/writing instruments.
+ * Supabase client bound to the request cookies — used only for the login
+ * session (Supabase Auth), never for reading/writing instruments.
  * Server Components can't write cookies, so `setAll` failures there are
  * ignored; src/proxy.ts refreshes the session before /admin renders.
  */

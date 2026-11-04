@@ -2,13 +2,19 @@ import "server-only";
 import type { User } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { getAdminEmails } from "@/lib/supabase/env";
-import { ADMIN_ROLE, isAdminAuthUser, isFixedAdmin } from "./admin-role";
+import {
+  ADMIN_ROLE,
+  SELF_SIGNUP_FLAG,
+  isAdminAuthUser,
+  isFixedAdminUser,
+} from "./admin-role";
 import type { AdminUserInput } from "./admin-user-form";
 
 /**
- * Administrator accounts live in Supabase Auth (no table of our own): the
- * admin flag is `app_metadata.role`, the display name is
- * `user_metadata.name`. Only call these after requireAdmin().
+ * Accounts live in Supabase Auth (no table of our own): the admin flag is
+ * `app_metadata.role`, the display name is `user_metadata.name`. Only call
+ * these after requireAdmin() — except createUserAccount, which backs the
+ * public sign-up form.
  */
 
 export interface AdminAccount {
@@ -21,6 +27,10 @@ export interface AdminAccount {
   lastSignInAt: string | null;
 }
 
+export interface UserAccount extends AdminAccount {
+  isAdmin: boolean;
+}
+
 /** Message safe to show in the form (Supabase's own text is English). */
 export class AdminAccountError extends Error {}
 
@@ -30,9 +40,19 @@ function toAccount(user: User, fixedEmails: ReadonlySet<string>): AdminAccount {
     id: user.id,
     email: (user.email ?? "").toLowerCase(),
     name: typeof name === "string" && name ? name : null,
-    fixed: isFixedAdmin(user.email, fixedEmails),
+    fixed: isFixedAdminUser(user, fixedEmails),
     createdAt: user.created_at,
     lastSignInAt: user.last_sign_in_at ?? null,
+  };
+}
+
+function toUserAccount(
+  user: User,
+  fixedEmails: ReadonlySet<string>,
+): UserAccount {
+  return {
+    ...toAccount(user, fixedEmails),
+    isAdmin: isAdminAuthUser(user, fixedEmails),
   };
 }
 
@@ -70,14 +90,51 @@ export async function listAdminAccounts(): Promise<AdminAccount[]> {
     );
 }
 
-export async function getAdminAccount(
-  id: string,
-): Promise<AdminAccount | null> {
+/** Every account, newest first, so recent sign-ups are easy to find. */
+export async function listUserAccounts(): Promise<UserAccount[]> {
+  const fixed = getAdminEmails();
+  return (await listAllUsers())
+    .map((user) => toUserAccount(user, fixed))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function getUserAccount(id: string): Promise<UserAccount | null> {
   const { data, error } =
     await createServiceClient().auth.admin.getUserById(id);
   if (error || !data.user) return null;
-  const fixed = getAdminEmails();
-  return isAdminAuthUser(data.user, fixed) ? toAccount(data.user, fixed) : null;
+  return toUserAccount(data.user, getAdminEmails());
+}
+
+export async function getAdminAccount(
+  id: string,
+): Promise<AdminAccount | null> {
+  const account = await getUserAccount(id);
+  return account?.isAdmin ? account : null;
+}
+
+/** Self-service sign-up: an ordinary account, with no admin flag. Goes through
+ * the Admin API because public sign-ups stay disabled in Supabase, so this
+ * form (and its checks) is the only way to self-register. */
+export async function createUserAccount(input: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<void> {
+  const { error } = await createServiceClient().auth.admin.createUser({
+    email: input.email,
+    password: input.password,
+    email_confirm: true,
+    app_metadata: { [SELF_SIGNUP_FLAG]: true },
+    user_metadata: { name: input.name },
+  });
+  if (error) translate(error);
+}
+
+export async function promoteToAdmin(id: string): Promise<void> {
+  const { error } = await createServiceClient().auth.admin.updateUserById(id, {
+    app_metadata: { role: ADMIN_ROLE },
+  });
+  if (error) translate(error);
 }
 
 export async function createAdminAccount(

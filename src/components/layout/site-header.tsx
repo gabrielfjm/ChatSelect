@@ -3,7 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogIn, LogOut, Menu, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Menu,
+  UserPlus,
+  UserRound,
+  X,
+} from "lucide-react";
 import { logout } from "@/app/admin/actions";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Container } from "@/components/layout/container";
@@ -40,18 +48,19 @@ function resolveActiveHref(
   return match?.href ?? pathname;
 }
 
-export interface HeaderAdmin {
+export interface HeaderUser {
   email: string;
   name: string | null;
+  isAdmin: boolean;
 }
 
-/** Green dot + "Logado como …" so the admin always knows their session
- * state; logged-out visitors just see a discreet "Entrar" link. */
+/** Green dot + "Logado como …" so the user always knows their session
+ * state; logged-out visitors just see the "Entrar" and "Criar conta" links. */
 function LoginStatus({
-  admin,
+  user,
   className,
 }: {
-  admin: HeaderAdmin | null;
+  user: HeaderUser | null;
   className?: string;
 }) {
   return (
@@ -62,16 +71,16 @@ function LoginStatus({
         aria-hidden="true"
         className={cn(
           "size-2 shrink-0 rounded-full",
-          admin
+          user
             ? "bg-emerald-400 shadow-[0_0_0_3px] shadow-emerald-400/20"
             : "bg-slate-500",
         )}
       />
-      {admin ? (
+      {user ? (
         <span className="truncate">
           Logado como{" "}
-          <span className="text-white" title={admin.email}>
-            {admin.name ?? admin.email}
+          <span className="text-white" title={user.email}>
+            {user.name ?? user.email}
           </span>
         </span>
       ) : (
@@ -81,33 +90,49 @@ function LoginStatus({
   );
 }
 
-function AdminActions({
-  admin,
-  inAdmin,
+function AccountActions({
+  user,
+  current,
   onNavigate,
   stacked = false,
 }: {
-  admin: HeaderAdmin | null;
-  inAdmin: boolean;
+  user: HeaderUser | null;
+  /** The signed-in user is on the page their main button leads to. */
+  current: boolean;
   onNavigate?: () => void;
   stacked?: boolean;
 }) {
   const buttonClass =
     "border-white/25 bg-transparent text-white shadow-none hover:bg-white/10 hover:text-white";
 
-  if (!admin) {
+  if (!user) {
     return (
-      <Button
-        asChild
-        size="sm"
-        variant="outline"
-        className={cn(buttonClass, stacked && "w-full justify-start")}
-      >
-        <Link href="/admin/login" onClick={onNavigate}>
-          <LogIn aria-hidden="true" />
-          Entrar como admin
-        </Link>
-      </Button>
+      <div className={cn("flex gap-2", stacked && "flex-col")}>
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className={cn(buttonClass, stacked && "w-full justify-start")}
+        >
+          <Link href="/entrar" onClick={onNavigate}>
+            <LogIn aria-hidden="true" />
+            Entrar
+          </Link>
+        </Button>
+        <Button
+          asChild
+          size="sm"
+          className={cn(
+            "bg-primary hover:bg-primary-hover text-white",
+            stacked && "w-full justify-start",
+          )}
+        >
+          <Link href="/cadastro" onClick={onNavigate}>
+            <UserPlus aria-hidden="true" />
+            Criar conta
+          </Link>
+        </Button>
+      </div>
     );
   }
 
@@ -117,19 +142,23 @@ function AdminActions({
         asChild
         size="sm"
         className={cn(
-          inAdmin
+          current
             ? "bg-white text-[#0F172A] hover:bg-blue-50"
             : "bg-primary hover:bg-primary-hover text-white",
           stacked && "w-full justify-start",
         )}
       >
         <Link
-          href="/admin"
+          href={user.isAdmin ? "/admin" : "/conta"}
           onClick={onNavigate}
-          aria-current={inAdmin ? "page" : undefined}
+          aria-current={current ? "page" : undefined}
         >
-          <LayoutDashboard aria-hidden="true" />
-          Painel do administrador
+          {user.isAdmin ? (
+            <LayoutDashboard aria-hidden="true" />
+          ) : (
+            <UserRound aria-hidden="true" />
+          )}
+          {user.isAdmin ? "Painel do administrador" : "Minha conta"}
         </Link>
       </Button>
       <form action={logout}>
@@ -138,7 +167,7 @@ function AdminActions({
           size="sm"
           variant="outline"
           className={cn(buttonClass, stacked && "w-full justify-start")}
-          aria-label="Sair da conta de administrador"
+          aria-label="Sair da conta"
           title="Sair"
         >
           <LogOut aria-hidden="true" />
@@ -151,23 +180,25 @@ function AdminActions({
 
 export function SiteHeader({
   adHocSlugs,
-  admin,
+  user,
 }: {
   adHocSlugs: string[];
-  admin: HeaderAdmin | null;
+  user: HeaderUser | null;
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const adHocSet = useMemo(() => new Set(adHocSlugs), [adHocSlugs]);
   const activeHref = resolveActiveHref(pathname, adHocSet);
-  const inAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
+  const current = user?.isAdmin
+    ? pathname === "/admin" || pathname.startsWith("/admin/")
+    : pathname === "/conta";
 
   return (
     <header className="sticky top-0 z-40 bg-[#0F172A]">
-      {admin && (
+      {user && (
         <div className="hidden border-b border-white/10 lg:block">
           <Container className="flex justify-end py-1.5">
-            <LoginStatus admin={admin} />
+            <LoginStatus user={user} />
           </Container>
         </div>
       )}
@@ -211,14 +242,14 @@ export function SiteHeader({
           </nav>
 
           <div className="hidden items-center border-l border-white/15 pl-5 lg:flex">
-            <AdminActions admin={admin} inAdmin={inAdmin} />
+            <AccountActions user={user} current={current} />
           </div>
 
-          {admin && (
+          {user && (
             <span
               className="size-2.5 rounded-full bg-emerald-400 lg:hidden"
-              title={`Logado como ${admin.name ?? admin.email}`}
-              aria-label={`Logado como ${admin.name ?? admin.email}`}
+              title={`Logado como ${user.name ?? user.email}`}
+              aria-label={`Logado como ${user.name ?? user.email}`}
               role="img"
             />
           )}
@@ -260,10 +291,10 @@ export function SiteHeader({
               );
             })}
             <div className="mt-2 space-y-3 border-t border-white/15 px-2 pt-4">
-              <LoginStatus admin={admin} />
-              <AdminActions
-                admin={admin}
-                inAdmin={inAdmin}
+              <LoginStatus user={user} />
+              <AccountActions
+                user={user}
+                current={current}
                 onNavigate={() => setOpen(false)}
                 stacked
               />

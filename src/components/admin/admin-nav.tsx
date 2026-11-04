@@ -17,6 +17,11 @@ export function AdminNav({ selfId }: { selfId: string }) {
         pathname === "/admin" || pathname.startsWith("/admin/instrumentos"),
     },
     {
+      href: "/admin/contas",
+      label: "Contas",
+      active: pathname.startsWith("/admin/contas"),
+    },
+    {
       href: "/admin/administradores",
       label: "Administradores",
       active:

@@ -3,7 +3,7 @@ import { Inter, Source_Serif_4 } from "next/font/google";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { getAdHocSlugs } from "@/lib/catalog/instruments-repository";
-import { getAdminUser } from "@/lib/auth/admin";
+import { getSessionUser } from "@/lib/auth/admin";
 import "./globals.css";
 
 const bodyFont = Inter({
@@ -31,10 +31,10 @@ export const dynamic = "force-dynamic";
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   // Only used to highlight the header's active item, so a database hiccup
   // here shouldn't take down pages that don't need the catalog (e.g. /sobre).
-  const [adHocSlugs, admin] = await Promise.all([
+  const [adHocSlugs, user] = await Promise.all([
     getAdHocSlugs().catch(() => []),
     // Header login badge only — never used for authorization.
-    getAdminUser().catch(() => null),
+    getSessionUser().catch(() => null),
   ]);
 
   return (
@@ -51,7 +51,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SiteHeader
           adHocSlugs={adHocSlugs}
-          admin={admin ? { email: admin.email, name: admin.name } : null}
+          user={
+            user
+              ? { email: user.email, name: user.name, isAdmin: user.isAdmin }
+              : null
+          }
         />
         <main id="main-content" className="flex-1">
           {children}

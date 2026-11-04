@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 /**
- * Keeps the admin's Supabase Auth session fresh: Server Components can't
+ * Keeps the user's Supabase Auth session fresh: Server Components can't
  * write cookies, so an expired access token is refreshed here before any
  * page renders (the header shows the login state everywhere).
  * Authorization itself is NOT decided here — every admin page and Server

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-/** Validation for the create/edit administrator form. Pure — unit tested. */
+/** Validation for the account forms: create/edit administrator and public
+ * sign-up. Pure — unit tested. */
 
 const MIN_PASSWORD = 8;
 // Supabase Auth (bcrypt) ignores anything past 72 bytes.
@@ -62,7 +63,7 @@ export function parseAdminUserForm(
 
   const { name, email, password, passwordConfirm } = parsed.data;
   if (password === "" && requirePassword) {
-    fieldErrors.password = "Defina uma senha inicial.";
+    fieldErrors.password = "Defina uma senha.";
   } else if (password !== "") {
     if (password.length < MIN_PASSWORD) {
       fieldErrors.password = `Use pelo menos ${MIN_PASSWORD} caracteres.`;
