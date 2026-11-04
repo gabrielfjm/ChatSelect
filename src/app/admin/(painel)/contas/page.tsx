@@ -85,7 +85,7 @@ export default async function AccountsPage({
                   </span>
                 )}
               </p>
-              <p className="text-muted-foreground truncate text-xs">
+              <p className="text-muted-foreground text-xs break-words">
                 {account.name ? `${account.email} · ` : ""}
                 criada em {dateFormat.format(new Date(account.createdAt))}
                 {" · "}
